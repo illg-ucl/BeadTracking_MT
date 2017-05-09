@@ -4,9 +4,12 @@ Code for the detection and tracking in 3D of beads (with diffraction rings), typ
 Copyright (c) 2017. Isabel Llorente-Garcia, Dept. of Physics and Astronomy, University College London, United Kingdom.
 
 Released and licensed under a BSD 2-Clause License:
+
 https://github.com/illg-ucl/BeadTracking_MT/blob/master/LICENSE
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the BSD 2-Clause License.
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
