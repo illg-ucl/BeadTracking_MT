@@ -18,10 +18,12 @@ a copy of the BSD 2-Clause License along with this program.
 
 Citation: If you use this software for your data analysis please acknowledge 
           it in your publications and cite as follows.
+          
               -Citation example 1: 
                BeadTracking_MT software. (Version). 2017. Isabel Llorente-Garcia, 
                Dept. of Physics and Astronomy, University College London, United Kingdom.
                https://github.com/illg-ucl/BeadTracking_MT. (Download date).
+               
               -Citation example 2:
                @Manual{... ,
                 title  = {BeadTracking_MT software. (Version).},
