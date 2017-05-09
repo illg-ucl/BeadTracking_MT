@@ -2,13 +2,13 @@ BSD 2-Clause License
 
 Copyright (c) "2017, Isabel Llorente-Garcia. 
                Affiliation: Dept. of Physics and Astronomy, University College London.
-               URL: https://github.com/illg-ucl/BeadTracking_MagnTweezers
+               URL: https://github.com/illg-ucl/BeadTracking_MT
                Citation: If you use this software for your data analysis please acknowledge 
                it in your publications and cite as follows.
                Citation example 1: 
                BeadTracking_MT software. (Version). 2017. Isabel Llorente-Garcia, 
                Dept. of Physics and Astronomy, University College London, United Kingdom.
-               https://github.com/illg-ucl/BeadTracking_MagnTweezers. (Download date).
+               https://github.com/illg-ucl/BeadTracking_MT. (Download date).
                Citation example 2:
                @Manual{ ,
                 title  = {BeadTracking_MT software. (Version).},
@@ -16,7 +16,7 @@ Copyright (c) "2017, Isabel Llorente-Garcia.
                 organization = { Dept. of Physics and Astronomy, University College London, United Kingdom.},
                 address      = {Gower Place, London, UK.},
                 year         = 2017,
-                url          = {https://github.com/illg-ucl/BeadTracking_MagnTweezers}
+                url          = {https://github.com/illg-ucl/BeadTracking_MT}
                }
                "
 All rights reserved.
