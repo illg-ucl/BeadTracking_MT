@@ -1,0 +1,21 @@
+function plotBeadTrajNumb(image_label,n_traj_start,n_traj_end,minPointsTraj) 
+%
+% Created by Isabel Llorente-Garcia, August 2011.
+% If you use this code please acknowledge Isabel Llorente-Garcia in your
+% publications.
+%
+
+
+%% Plot frame average ROI with numbers of final accepted spots (index nn) overlaid 
+% on top to be able to visually identify them:
+figure; 
+imshow(frame_Gray,[],'Border','tight');
+hold on;
+for nn=1:length(results)
+    text(results(nn).Xcentre,results(nn).Ycentre,num2str(nn),'Color',[1 1 0],'FontSize',8); % number in yellow.
+end
+pause(0.1); % this pause is needed to give time for the plot to appear
+hold off;
+% SAVE current FIGURE as a .png and then close the figure window:
+figName = strcat('Avg_frame_Accepted_Spot_Numbers',image_label); % choose name of figure file for saving .png.
+saveFigurePNG(result_folder_name,figName); % See saveFigurePNG.m.

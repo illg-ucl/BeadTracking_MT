@@ -1,0 +1,14 @@
+Hi Isabel,
+
+That is what I tried before - I had a lot of trouble with the jar file and decided it wasn't going to be worth trying to solve that for me, 
+then also for the end-user on a mac.   Interesting that you found it easier.
+
+I've attached the andor drivers I have - it does look like they're only for windows. Also the code I use to run them - 
+I don't use the m files they provide, but call the mex functions directly.  See the "msif_loadframes"  and  "msif_getnumframes"  
+subfunctions in VideoFileReadRoutines.  Not the most efficient code with multiple file initialisations, but we've never had to do 
+heavy duty file input on sif files so it's never been an issue.
+
+Bradley
+
+
+See Andor SIF drivers.zip and extract_image_sequence_data.m.

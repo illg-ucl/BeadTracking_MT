@@ -1,0 +1,23 @@
+%memory inefficient: loading entire video at once.
+         %can call by frame or whole thing. Oddly cannot call for multiple
+         %frames at once using their default functions.
+
+         atsifiomex('ATSIF_CloseFile');
+         [~] = atsifiomex('ATSIF_ReadFromFile',filename);
+         [~,numFrames] = atsifiomex('ATSIF_GetNumberFrames', 0);
+         [~,width] = atsifiomex('ATSIF_GetPropertyValue', 0, 'CCDRight');
+         width = str2double(width);
+         [~,height] = atsifiomex('ATSIF_GetPropertyValue', 0, 'CCDTop');
+         height = str2double(height);
+         [~,numPixels] = atsifiomex('ATSIF_GetFrameSize', 0);
+         assert(width*height==numPixels);
+         [~,video] = atsifiomex('ATSIF_GetAllFrames', 0,
+numPixels*numFrames);
+         video = reshape(video,[height,width,1,numFrames]);
+         atsifiomex('ATSIF_CloseFile');
+         video = video(:,:,1,start:finish);
+     catch me
+         data = sifread(filename);
+         video =
+reshape(data.imageData(:,:,start:finish),size(data.imageData,1),size(data.imageData,2),1,finish-start+1);
+     end

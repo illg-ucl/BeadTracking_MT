@@ -1,0 +1,24 @@
+function PD_all = allPD(input_vector)
+%
+% Created by Isabel Llorente Garcia. March 2012.
+% Calculation of Pair-wise Differences (PD) for an input vector. 
+% Note that all pair-wise differences are calculated for all pairs, not only for
+% consecutive pairs of points.
+%
+% Pair wise differences are calculated from start to end of input_vector:
+% positive/negative pair-wise differences corresponds to values
+% increasing/decreasing, respectively, from start to end of input_vector.
+%
+% Inputs: 
+% input_vector: needs to be a COLUMN vector.
+%
+% Outputs: 
+% PD_all: column vector with all pair-wise differences.
+
+PDM_all = getPDM(input_vector); % Pair-wise Differences Matrix. See getPDM.m.
+% Extract all useful values, extract all diagonals from matrix:
+PD_all = []; % initialise vector of pair-wise differences (PD).
+for i=1:size(PDM_all,1)-1
+    PD_all = [PD_all diag(PDM_all,-i)']; 
+end
+PD_all = PD_all'; % transpose into column vector.

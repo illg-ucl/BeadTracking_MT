@@ -1,0 +1,38 @@
+function [frame]=extract1frame(frame_number)
+% This function chooses a .sif image sequence from an input dialog box, 
+% returns the image data corresponding to its frame number "frame_number", and plots it.
+% 
+% example of how to call this function: extract1frame(100) extracts and plots
+% frame 100 of the chosen image sequence and plots it.
+
+% Data is in 'C:\Isabel\ExperimData\HeikoData\'
+disp('Data is in C:\Isabel\ExperimData\HeikoData\')
+disp(' ') % empty line
+
+% uigetfile opens a file dialog box to choose image data file:
+[file_data,path_data] = uigetfile({'*.sif'}, 'Chose image data sequence:');
+data_folder_path = strcat(path_data,file_data);
+disp(data_folder_path) % write .sif image path to command window.
+
+% first get size of .sif image file: (see IO_Input folder, SifFunctions.txt, or page 95 my notebook 1):
+[ReturnCode, numFrames, ImageSize, TotalAcquisitionSize]=GetAndorSifSize(data_folder_path,0);
+disp(' ') % empty line
+disp(['The total number of frames in this image sequence is: ',num2str(numFrames)]) %output total number of frames to command window.
+% numFrames is the length of the sequence, the number of frames.
+% ImageSize is the size of the image, e.g. 512*512.
+% TotalAcquisitionSize is numFrames*ImageSize
+
+% read .sif image data. sifData is an array of 1x1 structures, as many
+% columns as frames on image sequence. Reads frames 1 to numFrames:
+[sifData] = read_sif_data_direct(data_folder_path,numFrames,ImageSize,1,numFrames);
+
+
+p = sifData(frame_number); % selects the chosen frame number.
+frame = p{1}.sliceData; % extract frame data which is saved in the field 'sliceData' of the 1x1 structure which is p.
+% % N
+% min(min(frame))
+% max(max(frame))
+
+frame = mat2gray(frame);% transform matrix into a grayscale image (with values 0 to 1) to do image operations on it.
+frame = imrotate(frame,90);
+imshow(frame,[],'Border','tight');
