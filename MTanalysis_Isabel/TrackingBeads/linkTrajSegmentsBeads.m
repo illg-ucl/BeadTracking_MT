@@ -617,8 +617,8 @@ dataForSheet1 = [fieldnames(params_for_FindTrajects) struct2cell(params_for_Find
 % Params for "linkTrajSegments.m":
 dataForSheet2 = [fieldnames(params) struct2cell(params)];
 
-xlswrite(output_filename,dataForSheet1,'params FindTrajects'); % write data with parameters for "FindTrajects.m" to sheet 'params FindTrajects' in excel file.
-xlswrite(output_filename,dataForSheet2,'params linkTrajSegments'); % write data with parameters for "linkTrajSegments.m" to sheet 'params linkTrajSegments' in excel file.
+xlswrite(output_filename,dataForSheet1,'params FindTrajectsBeads'); % write data with parameters for "FindTrajects.m" to sheet 'params FindTrajects' in excel file.
+xlswrite(output_filename,dataForSheet2,'params linkTrajSegmentsBeads'); % write data with parameters for "linkTrajSegments.m" to sheet 'params linkTrajSegments' in excel file.
 xlswrite(output_filename,data_to_export_sorted_2,'Track results'); % write trajectory data to sheet 'Track results' in excel file. 
 % Note: the file gets saved into the same directory where the .sif image is
 % (sifImagePath).

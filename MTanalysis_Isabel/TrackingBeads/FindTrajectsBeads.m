@@ -159,7 +159,7 @@ params.rsq_min = rsq_min;
 % params.deflate = deflate;
 
 % PARAMETERS for eliminating coincident positions:
-d_coincid_cand = 3; % distance (in pixels) for eliminating coincidences in bead-position candidates.
+d_coincid_cand = 3; % distance (in pixels) for eliminating coincidences in bead-position candidates. Default: 3 pixels.
 d_coincid_found = 1; % distance for eliminating coincidences in found bead centres.
 % Save parameters to results as structure "params":
 params.d_coincid_cand = d_coincid_cand; % distance for eliminating coincidences in spot candidates.
@@ -167,12 +167,12 @@ params.d_coincid_found = d_coincid_found; % distance for eliminating coincidence
 
 % PARAMETERS for building trajectories:
 % For linking bead centres in current and previous frames:
-d_01_max = 30; % max distance in pixels between bead centres in current and previous frames, for linking them into a trajectory (5).
+d_01_max = 30; % max distance in pixels between bead centres in current and previous frames, for linking them into a trajectory (Default: 30 pix).
 % Save parameters to results as structure "params":
 params.d_01_max = d_01_max; 
 
 % For linking loose bead centres in current frame and 2 frames ago (jump of 1 frame in trajectory):
-d_02_max = 30; % max distance in pixels between bead centres in current frame and 2 frames ago. (default: 5)
+d_02_max = 30; % max distance in pixels between bead centres in current frame and 2 frames ago. (default: 30 pix).
 % Save parameters to results as structure "params":
 params.d_02_max = d_02_max; 
 
