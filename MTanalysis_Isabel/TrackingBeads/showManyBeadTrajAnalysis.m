@@ -215,14 +215,97 @@ load(good_tracks_path.name); % This loads the structure "good_tracks" onto the w
 % image sequence.
 
 
+%% Read in all trajectory data (excel file with all tracks): 
+% (.xls file previously generated with functions 'FindTrajectsBeads' and 'linkTrajSegmentsBeads'):
+
+% error control:
+if 2~=exist('xlsread') 
+    error('Check file dependencies - you need to install xlsread'); 
+end
+
+% Open excel file and read the data:
+[NUMERIC,TXT,RAW]=xlsread(trajXlsPath,'Track results'); % import the data in the sheet named 'Track results'.
+% Import the column heads and assign ID
+colheads = TXT;
+% The column titles are: CentreX, CentreY, ClipFlag, rsqFitX, rsqFitY,
+% FrameNumber, BeadNumber,	TrajNumber.
+
+% Generate ID: ID is a structure with fiels with the same names as the
+% column titles, and each has an ID value of 1, 2, 3, etc (see below).
+for i=1:numel(colheads) 
+    ID.(colheads{i}) = find(strcmp(TXT,colheads{i})); 
+end
+% eg. ID = 
+%         CentreX: 181.1559
+%         CentreY: 393.0774
+%        ClipFlag: 0
+%         rsqFitX: 0.9997
+%         rsqFitY: 0.9991
+%     FrameNumber: 1
+%      BeadNumber: 3
+%      TrajNumber: 3
+
+% The trajectory number column:
+traj = NUMERIC(:,ID.TrajNumber); % NUMERIC is the numeric data read from the excel file (without the row of column titles).
+disp('File Loaded successfully!');
+
+% Get individual tracks:
+
+% List the points at which the trajectory number first appears:
+[A,I,J] = unique(traj,'first'); % [A,I,J] = UNIQUE(traj,'first') returns the vector I to index the first occurrence of each unique value in traj.  
+% A has the same values as in traj but with no repetitions. A will also be sorted.
+% List the points at which the trajectory number last appears:
+[A,Y,Z] = unique(traj,'last'); % UNIQUE(traj,'last'), returns the vector Y to index the last occurrence of each unique value in traj.
+
+% Get the number of tracks (no. of different trajectories):
+numtracks = numel(A);
+
+% Create tracks structure:
+tracks(1:numtracks) = struct('trajNumber',[],'xvalues',[],'yvalues',[],'mean_xvalue',[],'mean_yvalue',[]);
+del = []; % initialise for later.
+
+for i=1:numtracks 
+    % i
+    a = I(i); % index for starting point in trajectory.
+    b = Y(i); % index for ending point in trajectory.
+    
+    % Delete tracks that are less than minPointsTraj data points long:
+    if b-a+1 >= minPointsTraj  % Only analyse tracks which have at least "minPointsTraj" points (frames) in them (5, or 15, e.g.).
+    
+    data{i} = NUMERIC(a:b,:);
+    % tracks(i).XLS.track_index = A(i);
+    tracks(i).trajNumber = A(i);
+    % all values in pixels.
+    tracks(i).xvalues = data{i}(1:end,ID.CentreX); % original xvalues in image (used later for plotting traj on image).
+    tracks(i).yvalues = data{i}(1:end,ID.CentreY); % original xvalues in image (used later for plotting traj on image).           
+    tracks(i).mean_xvalue = mean(data{i}(1:end,ID.CentreX)); % mean x value at which the Traj Number will be displayed. 
+    tracks(i).mean_yvalue = mean(data{i}(1:end,ID.CentreY)); % mean y value at which the Traj Number will be displayed.
+    % Set origin to zero:
+    tracks(i).xvalues_offset = tracks(i).xvalues - (tracks(i).xvalues(1)); % xvalues relative to the first one in the trajectory.
+    tracks(i).yvalues_offset = tracks(i).yvalues - (tracks(i).yvalues(1)); % % yvalues relative to the first one in the trajectory.
+    tracks(i).msd_unavg = tracks(i).xvalues_offset.^2+tracks(i).yvalues_offset.^2; % squared displacement from the origin: x^2 + y^2.
+    tracks(i).frame = data{i}(1:end,ID.FrameNumber); % frame number.
+    tracks(i).timeabs = data{i}(1:end,ID.FrameNumber).*tsamp; % tsamp is the time between frames.
+    tracks(i).timerel = tracks(i).timeabs-tracks(i).timeabs(1); % Set the first frame analysed as time zero reference (not used for now). 
+    tracks(i).numel = b-a+1; % Number of points in the track. Isabel: it used to be b-a, I changed it to b-a+1.
+    tracks(i).minNumPointsInTraj = minPointsTraj;
+    tracks(i) = getDisplacement(tracks(i),tsamp); % calculate msd and its error and add it to result structure.
+    else
+        % save indices to delete later:
+        del(i) = i;     
+    end
+    
+end
+
+% Delete tracks which were too short: 
+tracks(find(del))=[];
+
+% ========================
+
 %% Analyse all trajectory data (get msd): 
-% (.xls file previously generated with functions 'FindTrajects' and 'linkTrajSegments'):
-analysedAllTraj = analyseTraj(trajXlsPath,tsamp,minPointsTraj);
+analysedAllTraj = tracks; 
 % 'analysedAllTraj' is a structure array with as many elements as
-% analysed trajectories, and
-% with fields 'XLS', 'xvalues', 'yvalues', 'intensity', 'msd_unavg',
-% 'timeabs', 'timerel', 'numel','minNumPointsInTraj', 'timediff', 'msd', 'errorMsd',
-% 'errorMsdRelPercent', 'disp', 'SNR','BgNoiseStd','IbgAvg','IinnerTot','rsqFit'.
+% analysed trajectories, and with various fields: 'xvalues', 'yvalues', etc.
 
 if isempty(analysedAllTraj)
     disp('The total number of long enough trajectories (to analyse) for this file is zero.');

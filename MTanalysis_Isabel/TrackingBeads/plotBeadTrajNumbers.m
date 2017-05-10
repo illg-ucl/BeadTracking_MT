@@ -68,7 +68,7 @@ trajXlsPath = trajXlsPath0.name;
 
 
 %% Open all trajectory data (excel file): 
-% (.xls file previously generated with functions 'FindTrajects' and 'linkTrajSegments'):
+% (.xls file previously generated with functions 'FindTrajectsBeads' and 'linkTrajSegmentsBeads'):
 
 % error control:
 if 2~=exist('xlsread') 

@@ -128,29 +128,6 @@ tracks.errorMsd = errorMsd';
 tracks.errorMsdRelPercent = 100.*errorRelMsd';
 tracks.disp = disp;
 
-% This is the original code - assuming uniformly sampled tracks (constant frame spacing). 
-% % Get MSD2
-% 
-% for i=1:length(tracks)
-%   temp2 = zeros(length(tracks(i).time),1);
-%     for n=0:length(tracks(i).time)-1 % timei ndexes
-%       
-%     N = length(tracks(i).time);
-% 
-%     for j=1:N-n
-%        % tracks.disp2{n+1}(j,:) = [tracks(i).xvalues(j+n) tracks(i).xvalues(j) tracks(i).xvalues(j+n)-tracks(i).xvalues(j)];
-%        temp2(n+1)=temp2(n+1)+(tracks(i).xvalues(j+n)-tracks(i).xvalues(j)).^2+(tracks(i).yvalues(j+n)-tracks(i).yvalues(j)).^2;
-%     end
-%     temp2(n+1) = temp2(n+1)/(N-n);
-%     end
-% 
-%     msd = temp2;     
-% end 
-% 
-% tracks.msd2= msd;
-% 
-% end
-
 end
     
  
