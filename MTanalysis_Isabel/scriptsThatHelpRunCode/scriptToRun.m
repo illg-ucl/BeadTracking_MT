@@ -33,7 +33,7 @@ frame1 = extract1frameB(1);
 [new_x1,new_y1,pos_to_keep1] = eliminateCoincidentPositions(x1,y1,3);
 
 % Subtract background, method 1 is faster:
-frameNoBgnd1 = removeBgnd(frame1,new_x,new_y1,50,60,1);
+frameNoBgnd1 = removeBgnd(frame1,new_x1,new_y1,50,60,1);
 
 % Test finding bead centre on single frame:
 s1 = findBeadCentre1frame(frameNoBgnd1,new_x1(1),new_y1(1),50,60);
@@ -41,9 +41,13 @@ s1 = findBeadCentre1frame(frameNoBgnd1,new_x1(1),new_y1(1),50,60);
 
 %% To analyse video sequences: 
 
-% Find trajectories and output them to one excel file:
-t25 = FindTrajectsBeads('25',1,10);
-linkTrajSegmentsBeads('25',1,10,t25,'image25');
+% Find trajectories and output them to one excel file, for frames 1 to 117:
+t25 = FindTrajectsBeads('25',1,117);
+linkTrajSegmentsBeads('25',1,117,t25,'image25');
 
 % Accept tracks manually after visual inspection:
 good_tracks1 = goThroughBeadTracksVideo('25',1,'end',3); 
+
+%
+%
+%
