@@ -33,7 +33,7 @@ function linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,da
 % They should be the same as previously used to produce bead_results using FindTrajects.m.
 % bead_results: parameters (bead_results{1}) and calculated trajectory segments (bead_results{2}). It is the output of function FindTrajects.m 
 % (it is a cell array with two elements. The second one is a structure array containing all segment results).
-% data_set_label: is a user-defined label that will form part of the name of the output excel file. E.g.: 'ATPase-GFP'.  
+% data_set_label: is a user-defined label for the data set, that will form part of the name of the output excel file. E.g.: 'ATPase-GFP'.  
 %
 % Example of how to call this function:
 % linkTrajSegmentsBeads('490',100,110,s1,'ATPase-GFP'),

@@ -1,5 +1,5 @@
-function scriptToRun
-% 
+function saveFigurePNG(folder_name_for_saving,figName)
+%
 % ========================================
 % BeadTracking_MT.
 % Copyright (c) 2017. Isabel Llorente-Garcia, Dept. of Physics and Astronomy, University College London, United Kingdom.
@@ -23,35 +23,19 @@ function scriptToRun
 % url          = {https://github.com/illg-ucl/BeadTracking_MT}}
 % ========================================
 %
-
-%% To do tests on a single frame:
-frame1 = extract1frameB(1);
-
-[x1,y1] = findCandidateBeadPositions(frame1,1);
-
-% Eliminate candidate positions closer to each other than 3 pixels:
-[new_x1,new_y1,pos_to_keep1] = eliminateCoincidentPositions(x1,y1,3);
-
-% Subtract background, method 1 is faster:
-frameNoBgnd1 = removeBgnd(frame1,new_x1,new_y1,50,60,1);
-
-% Test finding bead centre on single frame:
-s1 = findBeadCentre1frame(frameNoBgnd1,new_x1(1),new_y1(1),50,60);
- 
-
-%% To analyse video sequences: 
-
-% Find trajectories and output them to one excel file, for frames 1 to 117:
-t25 = FindTrajectsBeads('25',1,117);
-linkTrajSegmentsBeads('25',1,117,t25,'tests'); 
-% This produces Excel file with trajectories, "tests_25fullTrajs.xls", in current directory folder.
-
-% Plot and save .png image of Trajectory numbers for found beads overlaid
-% on top of first frame:
-plotBeadTrajNumbers('25',10)
-
-% Accept tracks manually after visual inspection:
-good_tracks1 = goThroughBeadTracksVideo('25',1,'end',3); 
+% Save current figure as a .png file in a directory named "folder_name_for_saving",
+% which already exists. The figure is saved with the entered name "figName".
+% Both inputs are strings.
+% It closes the figure window at the end.
 %
-%
-%
+% Example: figName = strcat('frameAvg',image_label), with image_label='554'.
+
+cd(folder_name_for_saving); % change to directory in which results are saved.
+% Export the current figure window at screen size as a png into folder
+% folder_name_for_saving.
+set(gcf, 'PaperPositionMode', 'auto')  % Use screen size. (gcf=get current figure)
+% h = get(gcf);
+print('-dpng','-r300',figName)  % add -r300 (to save at 300 dpi, higher resolution) after -dpng to control resolution.
+cd('..'); % go back to previous directory.
+close; % deletes the current figure (many open figures take too much memory and make Matlab crash).
+    
