@@ -24,13 +24,20 @@ function tracks = getDisplacement(tracks,tsamp)
 % url          = {https://github.com/illg-ucl/BeadTracking_MT}}
 % ========================================
 %
-% Calculate mean square displacements as a function of time-interval delta t.
+% Calculates 2D mean square displacements (msd) as a function of time-interval delta t.
 %
-% The input 'tracks' is an intermediate output of function 'analyseTraj'.
-% 'tsamp' is the sampling time, used to calibrate the absolute time, to go from frames to time in seconds. 
-% It is the time between frames in seconds. 
-% The output returns the trajectory data including the msd, delta t, msd
-% error, etc...
+% INPUTS:
+% - tracks: this input is an structure for a single track or trajectory
+% containing fields, 'numel' (number of points/frames in track), 'xvalues'
+% (vector of x values in pixels), 'yvalues' (vector of y values in pixels)
+% and 'timeabs' (absolute time in seconds). This is created within function
+% showManyBeadTrajAnalysis.m.
+% - tsamp: sampling time (time between frames in seconds) used to calibrate the
+% absolute time, to go from frame number to time in seconds.
+%
+% OUTPUT:
+% - tracks: the function returns the trajectory data in the same structure
+% format as the input but with added fields: deltaTime, msd, errorMsd, errorMsdRelPercent, dips.
 
 N = tracks.numel; % Number of data points in a track.
 Ndiff = nchoosek(N,2); % Ndiff is the number of combinations of N things taken 2 at a time.
@@ -38,7 +45,7 @@ Ndiff = nchoosek(N,2); % Ndiff is the number of combinations of N things taken 2
 % Get the pairwise difference matrix:
 x = tracks.xvalues;
 y = tracks.yvalues;
-t = tracks.timeabs; % Note (Isabel): use the absolute time.
+t = tracks.timeabs; % absolute time in seconds.
 
 PDMx = getPDM(x); % GET Pairwise Difference Matrix. See getPDM.m. 
 PDMy = getPDM(y);
@@ -69,6 +76,7 @@ xdiff = xdiff(J(:));
 % and output vector M gives indices for the first occurrence of each unique value in X.  
 % L has no repetitions and is also sorted.
 
+% Error control:
 % Check that there are no more than N-1 elements in M. Required because
 % numerical accuracy means unique was failing:
 if numel(M)>Ndiff 
@@ -101,12 +109,12 @@ if numunq >1
         % Absolute error of msd (sqrt of variance, stdev):
         errorMsd(k) = msd(k)*errorRelMsd(k);
     end
-else % if there is only one value of deltaTime (ie if track only has two points):
+else % if there is only one value of deltaTime (i.e., if track only has two points):
     disp{1}.xdiff = xdiff;
     disp{1}.ydiff = ydiff;
     disp{1}.tdiff = tdiff(1);
     
-    % Calculate the average MSD:
+    % Calculate the average MSD (2D):
     msd(1) = mean(disp{1}.xdiff.^2+disp{1}.ydiff.^2);
     deltaTime(1) = disp{1}.tdiff;
     % Relative error of msd (see "Single particle tracking". H. Quian et
@@ -114,10 +122,6 @@ else % if there is only one value of deltaTime (ie if track only has two points)
     % the trajectory and n = deltaTime(k)/tsamp is the deltaTime in frames:
     n = deltaTime(1)/tsamp;
     errorRelMsd(1) = sqrt((2*n^2+1)/(3*n*(N-n+1)));
-    % Note that the previous relative error assumes that all points in the
-    % original trajectory are equally spaced in time/frames... So it is
-    % only an approximation if we have unregularly spaced points in a
-    % trajectory.
     % Absolute error of msd (sqrt of variance, stdev):
     errorMsd(1) = msd(1)*errorRelMsd(1);
 end

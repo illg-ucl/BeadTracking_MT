@@ -57,6 +57,11 @@ image_label = '25';
 % that is part of the file name. For example, for image video file "210217r25.tif", 
 % an appropriate label would be the string '25'. This will be used
 % throughout the analysis.
+% 
+% TRICK: If you don't know the number of frames in a given image you can do:
+% frame1 = extract1frameB(1);
+% and select the image from a folder. The command window will print the
+% number of frames on the image sequence, the file path and frame size.
 %
 % - 5. PARAMETERS: There are a number of important parameters that need to be set right.
 % These are within functions FindTrajectsBeads.m and
@@ -94,13 +99,15 @@ image_label = '25';
 t25 = FindTrajectsBeads(image_label,1,117);
 linkTrajSegmentsBeads(image_label,1,117,t25,'tests'); 
 % The above two lines generate an Excel file with all the trajectory data,
-% "tests_25fullTrajs.xls", in the current directory folder, for further
+% "tests_25_fullTrajs.xls", in the current directory folder, for further
 % analysis. This file contains two tabs with the parameters used in the
 % analysis and another tab with the trajectory data. The key columns are
 % CentreX, CentreY (x and y bead-centre positions in pixels) and
 % TrajNumber, the Trajectory Number.
 % Note: make sure that the start_frame and end_frame values are kept the
 % same throughout all functions.
+
+save 'resultStructures' 't*' % save all result structures in a .mat file.
 
 % - 7. Plot and save a .png image of the Trajectory Numbers for the found
 % beads overlaid on top of first frame of the video.
@@ -121,9 +128,9 @@ plotBeadTrajNumbers(image_label,10)
 % - 8a) Inspect tracks manually on a video to decide which to accept as good:
 % Use function:
 % good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_end,minPointsTraj)
-good_tracks1 = goThroughBeadTracksVideo(image_label,1,'end',10); 
+goThroughBeadTracksVideo(image_label,1,'end',10); 
 % The above generates the structure (after visually excluding tracks 4 and 5):  
-% good_tracks1 = 
+% good_tracks = 
 %            image_label: '25'
 %           n_traj_start: 1
 %             n_traj_end: 26
@@ -140,22 +147,22 @@ good_tracks1 = goThroughBeadTracksVideo(image_label,1,'end',10);
 % overlapping diffraction rings just by looking at the png image
 % generated in step 7.
 % E.g., to generate by hand, do:
-good_tracks2.image_label = image_label;
-good_tracks2.n_traj_start = 1;
-good_tracks2.n_traj_end = 26;
-good_tracks2.minPointsTraj = 10;
-good_tracks2.good_track_numbers = [1:3 6:26]; % All tracks from 1 to 26 except for tracks 4 and 5.
+good_tracks.image_label = image_label;
+good_tracks.n_traj_start = 1;
+good_tracks.n_traj_end = 26;
+good_tracks.minPointsTraj = 10;
+good_tracks.good_track_numbers = [1:3 6:26]; % All tracks from 1 to 26 except for tracks 4 and 5.
 % Save result (as a .mat file, required for further analysis functions):
 output_filename = strcat('good_track_nums_',image_label);
-save(output_filename,'good_tracks2') % save variable good_tracks2.
+save(output_filename,'good_tracks') % save variable good_tracks2.
 
 % - 9. Analyse each track separatedly.
 % This is based on functions showBeadTrajAnalysis.m and
 % showManyBeadTrajAnalysis.m
+% Running the line below produces one analysis excel file and graph per track:
+% processedManyTrajs = showManyBeadTrajAnalysis(image_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,minPointsTraj)
+showManyBeadTrajAnalysis('25',1,'end',1,1,100,0,10);
 
-% ===============
-% IN PROGRESS...
-% ===============
 
 
 

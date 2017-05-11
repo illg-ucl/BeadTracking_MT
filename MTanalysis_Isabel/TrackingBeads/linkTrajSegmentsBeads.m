@@ -607,7 +607,7 @@ end  % loop through selected frames.
 % -------------------------------------
 % Export final sorted full trajectory data (after linking and grouping
 % trajectory segments):
-output_filename = strcat(data_set_label,'_',image_label,'fullTrajs.xls'); % output .xls filename (before sorting data by trajectory number)
+output_filename = strcat(data_set_label,'_',image_label,'_fullTrajs.xls'); % output .xls filename (before sorting data by trajectory number)
 data_to_export_sorted_2 = [data_to_export_labels; data_to_export_sorted_2]; % Add as a first row the fieldnames (labels for each column).
 % Export parameters used for function "FindTrajects.m" and
 % "linkTrajSegments.m" to two other sheets in excel file:
