@@ -139,8 +139,8 @@ max_num_candidates = 200; % should be around 200.
 params.max_num_candidates = max_num_candidates;
 
 % PARAMETERS for finding bead centres (see findBeadCentre1frame.m, inputs to the function):
-subarray_halfwidth = 60; % (Default: 60 pixels). Halfwidth of image square subarray which includes bead and background around it.
-inner_circle_radius = 50; % (Default: 50 pixels). Radius of circular mask around bead. 
+subarray_halfwidth = 180; % (Default: 60 pixels). Halfwidth of image square subarray which includes bead and background around it.
+inner_circle_radius = 150; % (Default: 50 pixels). Radius of circular mask around bead. 
 % Save parameters to results as structure "params":
 params.subarray_halfwidth = subarray_halfwidth;
 params.inner_circle_radius = inner_circle_radius;

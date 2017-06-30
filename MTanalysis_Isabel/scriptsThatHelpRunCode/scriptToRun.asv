@@ -184,9 +184,7 @@ showManyBeadTrajAnalysis('25',1,'end',1,1,100,0,10);
 % 
 % % Test finding bead centre on single frame:
 % s1 = findBeadCentre1frame(frameNoBgnd1,new_x1(1),new_y1(1),50,60);
-
-%% ----------------------
-% Note: can use a set of individual .tif images and use ImageJ to make
-% a stack. Import -> Image Sequence. Choose first file and then tweak stack
-% settings. Then save as .tif (saves stack).
+ 
+% Note: can also use a set of individual .tif images and use ImageJ to mate
+% 
 

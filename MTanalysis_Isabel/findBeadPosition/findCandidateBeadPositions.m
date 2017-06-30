@@ -42,7 +42,7 @@ function [xx,yy] = findCandidateBeadPositions(frame,method)
 % - method: 1 for  morphological operations to obtain candidates for bead 
 %   centres (thresholding, eroding, etc.); 
 %           2 for centre-of-mass method;
-%           0 to plot and compare both methods (output is Method 1);
+%           0 to plot and compare both methods (output is that of Method 1);
 %
 % OUTPUTS:
 % Candidate bead-centre positions obtained from chosen method:
@@ -57,7 +57,7 @@ function [xx,yy] = findCandidateBeadPositions(frame,method)
 %% PARAMETERS:
 disk_radius1 = 4; % disk radius in pixels, for smoothing transformations below. Default 4.
 disk_radius2 = 6; % disk radius in pixels for eliminating small things that are not beads. Default 6.
-threshold_factor = 0.64; % For thresholding, aiming to detect the black centre of magnetic beads. Default 0.64.
+threshold_factor = 0.7; % For thresholding, aiming to detect the black centre of magnetic beads. Default 0.64.
 % Adjust according to image contrast.
 % A factor ~0.6 seems to be best to allow detection of dimmer beads and also separation
 % of nearby beads, though it can give rise to false candidates (between close beads).

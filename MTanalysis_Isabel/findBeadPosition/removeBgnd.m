@@ -23,6 +23,8 @@ function frame_final = removeBgnd(frame,xx,yy,inner_radius,subarray_halfsize,met
 % url          = {https://github.com/illg-ucl/BeadTracking_MT}}
 % ========================================
 %
+% Function to remove (subtract) background.
+%
 % INPUTS:
 % - frame: Input image, a single frame from a recorded sequence.
 % Note that the input image can be obtained as:
