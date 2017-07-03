@@ -58,7 +58,7 @@ function bead = findBeadCentre1frame(frameNoBgnd,x_estimate,y_estimate,inner_rad
 
 %-----------------
 % PARAMETERS:
-d_min = 10; % minimum subarray halfsize in pixels. If candidate bead centre too close to edge, exit function.
+d_min = 10; % minimum subarray halfsize in pixels. If candidate bead centre too close to edge, return empty result.
 % Choose method 1 or method 2 for averaging radial profiles.
 % Method 1: averages radial profiles over hemispheres.
 % Method 2: averages radial profiles over quarters, -45deg to 45deg, etc.
