@@ -510,8 +510,6 @@ for k = (start_frame+1):end_frame
         
         % Create cell arrays with empty elements to pre-asign sizes:
         d01 = cell(N0,N1); % Note: d01 is a cell array (matrix) but d_01 below is a scalar.
-        Iratio01 = cell(N0,N1); % Note: Iratio01 is a cell array (matrix) but Iratio_01 below is a scalar.
-        SigmaRatio01 = cell(N0,N1); % Note: SigmaRatio01 is a cell array (matrix) but SigmaRatio_01 below is a scalar.
         
         for q0 = 1:N0 % loop though accepted bead centres in previous frame.
             for q1 = 1:N1 % loop though accepted bead centres in current frame.

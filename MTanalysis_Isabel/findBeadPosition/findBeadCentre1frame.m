@@ -50,7 +50,13 @@ function bead = findBeadCentre1frame(frameNoBgnd,x_estimate,y_estimate,inner_rad
 %
 %
 % OUTPUTS: values resulting from the iterative method. The output is a
-% structure "bead" with the following fields (see end of file).
+% structure "bead" with the following fields (see end of file):
+% - CentreX % x-centre result found.
+% - CentreY  % y-centre result found.
+% - rsqFitX % r squared of parabolic fit of central peak of x cross-correlation.
+% - rsqFitY % r squared of parabolic fit of central peak of y cross-correlation.
+% - ClipFlag % 1 if candidate was closer to edge of image than inner_radius.
+% - TooCloseToEdge % 1 if candidate position closer to edge than d_min (see PARAMETERS below).
 %
 % Example of how to call this function: s1 = findBeadCentre1frame(frameNoBgnd1,271,364,50,60),
 % where frame1 is the image array (single-frame data). Then to obtain results
