@@ -130,7 +130,7 @@ for i=1:numtracks
     tracks(i).trajNumber = A(i);
     % all values in pixels.
     tracks(i).xvalues = data{i}(1:end,ID.CentreX); % original xvalues in image.
-    tracks(i).yvalues = data{i}(1:end,ID.CentreY); % original xvalues in image.        
+    tracks(i).yvalues = data{i}(1:end,ID.CentreY); % original yvalues in image.        
     tracks(i).mean_xvalue = mean(data{i}(1:end,ID.CentreX)); % mean x value at which the Traj Number will be displayed. 
     tracks(i).mean_yvalue = mean(data{i}(1:end,ID.CentreY)); % mean y value at which the Traj Number will be displayed.
     else

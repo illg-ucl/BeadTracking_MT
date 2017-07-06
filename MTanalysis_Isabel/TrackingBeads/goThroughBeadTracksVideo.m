@@ -27,14 +27,11 @@ function good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_
 % 'n_traj_start' to 'n_traj_end'.
 % The user is requested for input after each track is shown to say if it is
 % a "good" one (1) or not (0).
-% 
-% It works well for short tracks. It is similar to showManyTrajAnalysis2.m.
-% It does not save a .avi video file of the track.
 %
 % NOTE: before running this function you should move into a directory which
-% contains both the .sif/video image (labelled by 'image_label') which has previously been analysed with
-% 'FindTrajects.m' and 'linkTrajSegments.m' to produce the .xls file which
-% contains the trajectory results, which should be in the same directory as the .sif file.
+% contains both the video file (labelled by 'image_label') which has previously been analysed with
+% 'FindTrajectsBeads.m' and 'linkTrajSegmentsBeads.m' to produce the .xls file which
+% contains the trajectory results, which should be in the same directory as the video file.
 %
 % INPUTS: 
 % - 'image_label' string that labels the image sequence under analysis, e.g. '101'.
@@ -44,13 +41,13 @@ function good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_
 % - minPointsTraj: minimum number of data points that a trajectory must have in order to be
 % analised. A value of 3 is used for "showTrajAnalysis2.m" and
 % "showManyTrajAnalysis2.m". 
-% A value of at least 6 needs to be used for all methods in
+% (A value of at least 6 needs to be used for all methods in
 % "showTrajAnalysis.m" (and therefore "showManyTrajAnalysis.m") to work
-% well.
+% well.)
 % -----------------
 % IMPORTANT NOTE!!!: The values of all inputs: "image_label",
 % "n_traj_start", "n_traj_end" and "minPointsTraj" here need to be the same
-% as those used later on for functions "showManyTrajAnalysis.m" or "showManyTrajAnalysis2.m", 
+% as those used later on for functions "showManyBeadTrajAnalysis.m",
 % otherwise the trajectory numbers will be different!.
 % -----------------
 %
@@ -66,8 +63,8 @@ function good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_
 % The output is saved as a .mat file.
 %
 % Example of how to call this function:
-% gt = goThroughTracksVideo('1757_1',1,'end',3);
-% gt = goThroughTracksVideo('498',1,'end',6);
+% gt = goThroughBeadTracksVideo('1757_1',1,'end',3);
+% gt = goThroughBeadTracksVideo('498',1,'end',6);
 % ------------------------------------
 
 
@@ -75,7 +72,7 @@ function good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_
 
 % You need to be in the correct directory before running the function!!!!
 % Find paths in current folder which contain 'image_label' string:
-trajXlsPath0 = dir(strcat('*',image_label,'*.xls')); % Trajectory data path (excel file with the full trajectories as returned by function "linkTrajSegments.m").
+trajXlsPath0 = dir(strcat('*',image_label,'*.xls')); % Trajectory data path (excel file with the full trajectories as returned by function "linkTrajSegmentsBeads.m").
 % Error control:
 if isempty(trajXlsPath0) % If there is no .xls trajectory data file for such image number, show error and exit function:
     error('Check you are in the correct directory and run again. No .xls file found for that image number. Make sure image number is in between quotes ''.'); 
@@ -85,12 +82,9 @@ trajXlsPath = trajXlsPath0.name;
 
 
 %% Open and analyse all trajectory data (excel file): 
-% (.xls file previously generated with functions 'FindTrajects' and 'linkTrajSegments'):
+% (.xls file previously generated with functions 'FindTrajects' and 'linkTrajSegmentsBeads'):
 % ======================
 % The following derives from old function analyseTraj(file,tsamp,minPointsTraj):
-
-% Sampling time between frames, use tsamp = 1 here, so the time is in units of frames (irrelevant since this function is only used for a visual check).
-tsamp = 1;
 
 % error control:
 if 2~=exist('xlsread') 
@@ -121,7 +115,7 @@ end
 
 % The trajectory number column:
 traj = NUMERIC(:,ID.TrajNumber); % NUMERIC is the numeric data read from the excel file (without the row of column titles).
-disp('File Loaded successfully!');
+disp('Excel file read successfully.');
 
 % Get individual tracks:
 
@@ -149,21 +143,11 @@ for i=1:numtracks
     data{i} = NUMERIC(a:b,:);
     % tracks(i).XLS.track_index = A(i);
     tracks(i).trajNumber = A(i);
-    % all values in pixels.
     tracks(i).xvalues0 = data{i}(1:end,ID.CentreX); % original xvalues in image (used later for plotting traj on image).
     tracks(i).yvalues0 = data{i}(1:end,ID.CentreY); % original xvalues in image (used later for plotting traj on image).
-    % Set origin to zero:
-    tracks(i).xvalues = tracks(i).xvalues0 - (tracks(i).xvalues0(1)); % xvalues relative to the first one in the trajectory.
-    tracks(i).yvalues = tracks(i).yvalues0 - (tracks(i).yvalues0(1)); % % yvalues relative to the first one in the trajectory.
-    tracks(i).msd_unavg = tracks(i).xvalues.^2+tracks(i).yvalues.^2; % squared displacement from the origin: x^2 + y^2.
     tracks(i).frame = data{i}(1:end,ID.FrameNumber); % frame number.
-    tracks(i).timeabs = data{i}(1:end,ID.FrameNumber).*tsamp; % tsamp is the time between frames.
-    tracks(i).timerel = tracks(i).timeabs-tracks(i).timeabs(1); % Set the first frame analysed as time zero reference (not used for now). 
-    tracks(i).numel = b-a+1; % Number of points in the track. Isabel: it used to be b-a, I changed it to b-a+1.
+    tracks(i).numel = b-a+1; % Number of points in the track. 
     tracks(i).minNumPointsInTraj = minPointsTraj;
-    tracks(i).rsqFitX = data{i}(1:end,ID.rsqFitX); % r-square of parabolic fit to centre peak of cross-correlation along x, for bead centre finding.
-    tracks(i).rsqFitY = data{i}(1:end,ID.rsqFitY); % same along y.
-    tracks(i) = getDisplacement(tracks(i),tsamp); % calculate msd and its error and add it to result structure.
     
     else
         % save indices to delete later:
