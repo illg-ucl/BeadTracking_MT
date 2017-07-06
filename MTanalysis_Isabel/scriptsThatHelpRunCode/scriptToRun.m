@@ -36,7 +36,7 @@ function scriptToRun
 % subfolders (select appropriate folder) -> save.
 %
 % - 2. The source code has been tested using MATLAB R2016a (9.0.0.341360),
-% 64-bit (Win64), February 11, 2016. It requires some MATLAB packages to
+% 64-bit (Win64), February 11, 2017. It requires some MATLAB packages to
 % run. These are usually included in default MATLAB installations but check
 % by typing in the command window:
 % >> license('inuse')
@@ -50,6 +50,7 @@ function scriptToRun
 %
 % - 3. Make sure the Current Folder within Matlab is the folder that contains
 % your image video files. 
+data_folder = cd;
 
 % - 4. Define image_label: 
 image_label = '25';
@@ -117,6 +118,7 @@ save 'resultStructures' 't*' % save all result structures in a .mat file.
 % points that might appear due to suboptimal tracking when two beads are
 % very close together):
 plotBeadTrajNumbers(image_label,10)
+cd(data_folder); % return to data folder.
 
 % Note: the code does not work optimally for beads that are close together
 % and have overlapping diffraction rings. For these, we will have a low
