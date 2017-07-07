@@ -207,7 +207,7 @@ end
 
 % The trajectory number column:
 traj = NUMERIC(:,ID.TrajNumber); % NUMERIC is the numeric data read from the excel file (without the row of column titles).
-disp('File Loaded successfully!');
+disp('Excel file read successfully.');
 
 % Get individual tracks:
 
@@ -245,14 +245,14 @@ for i=1:numtracks
     tracks(i).timeabs = data{i}(1:end,ID.FrameNumber).*tsamp; % Absolute time in seconds. tsamp is the time between frames in s.
     tracks(i).minNumPointsInTraj = minPointsTraj;
     % All absolute position values in pixels:
-    tracks(i).xvalues = data{i}(1:end,ID.CentreX); % original xvalues in image (used later for plotting traj on image).
-    tracks(i).yvalues = data{i}(1:end,ID.CentreY); % original xvalues in image (used later for plotting traj on image).           
-    tracks(i).mean_xvalue = mean(data{i}(1:end,ID.CentreX)); % mean x value at which the Traj Number will be displayed. 
-    tracks(i).mean_yvalue = mean(data{i}(1:end,ID.CentreY)); % mean y value at which the Traj Number will be displayed.
-    tracks(i).msd_unavg = tracks(i).xvalues_offset.^2+tracks(i).yvalues_offset.^2; % absolute squared displacement from the origin (0,0): x^2 + y^2.
+    tracks(i).xvalues = data{i}(1:end,ID.CentreX); % xvalues of particle centre on image (used later for plotting traj on image).
+    tracks(i).yvalues = data{i}(1:end,ID.CentreY); % yvalues of particle centre on image.           
+    tracks(i).mean_xvalue = mean(data{i}(1:end,ID.CentreX)); % mean x value. 
+    tracks(i).mean_yvalue = mean(data{i}(1:end,ID.CentreY)); % mean y value.
     % Set spatial origin to position of first point in track:
-    tracks(i).xvalues_offset = tracks(i).xvalues - (tracks(i).xvalues(1)); % xvalues relative to the first one in the trajectory.
-    tracks(i).yvalues_offset = tracks(i).yvalues - (tracks(i).yvalues(1)); % % yvalues relative to the first one in the trajectory.
+    tracks(i).xvalues_offset = tracks(i).xvalues - (tracks(i).xvalues(1)); % xvalues relative to the first point in the trajectory.
+    tracks(i).yvalues_offset = tracks(i).yvalues - (tracks(i).yvalues(1)); % % yvalues relative to the first point in the trajectory.
+    tracks(i).msd_unavg = tracks(i).xvalues_offset.^2+tracks(i).yvalues_offset.^2; % absolute squared displacement from the origin (0,0): x^2 + y^2.
     % Set time origin to first point in track:
     tracks(i).timerel = tracks(i).timeabs-tracks(i).timeabs(1); % Time relative to first point in track. Set the first frame analysed as time zero reference (not used for now). 
     % Calculate and add to structure the 2D mean square displacement (msd):

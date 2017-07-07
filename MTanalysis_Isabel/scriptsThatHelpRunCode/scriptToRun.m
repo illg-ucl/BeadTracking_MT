@@ -157,6 +157,8 @@ good_tracks.good_track_numbers = [1:3 6:26]; % All tracks from 1 to 26 except fo
 % Save result (as a .mat file, required for further analysis functions):
 output_filename = strcat('good_track_nums_',image_label);
 save(output_filename,'good_tracks') % save variable good_tracks2.
+% NOTE: make sure you don't change the name 'good_tracks' to anything else.
+% It is used later by function showManyParticleTrajAanalysis.m.
 
 % - 9. Analyse each track separatedly.
 % This is based on functions showBeadTrajAnalysis.m and
