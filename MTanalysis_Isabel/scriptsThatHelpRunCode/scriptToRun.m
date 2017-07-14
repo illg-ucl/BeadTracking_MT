@@ -66,9 +66,12 @@ image_label = '25';
 %
 % - 5. PARAMETERS: There are a number of important parameters that need to be set right.
 % These are within functions FindTrajectsBeads.m and
-% linkTrajSegmentsBeads.m. Find these functions and tweak these parameters
-% on the PARAMETERS section at the beginning of each .m file. 
-% The key parameters in FindTrajectsBeads.m are:
+% linkTrajSegmentsBeads.m. Find these functions in the
+% "BeadTracking_MT\MTanalysis_Isabel" folder that contains the source code
+% and tweak these parameters on the PARAMETERS section at the beginning of
+% each .m file.
+%
+% The key parameters in BeadTracking_MT\MTanalysis_Isabel\TrackingBeadsFindTrajectsBeads.m are:
 % - subarray_halfwidth (Default: 60 pixels). Halfwidth of image square subarray which includes bead and background around it.
 % - inner_circle_radius (Default: 50 pixels); Radius of circular mask that contains the entire bead. 
 % - d_01_max (Default: 30 pixels); Max distance in pixels between bead
@@ -78,7 +81,8 @@ image_label = '25';
 % conditions.
 % - d_02_max (Default: 30 pix). Similar to above but for linking one frame
 % and two frames later.
-% The key parameters in linkTrajSegmentsBeads are:
+%
+% The key parameters in BeadTracking_MT\MTanalysis_Isabel\linkTrajSegmentsBeads are:
 % - d_01_max (Default: 30 pixels); Max distance in pixels between bead
 % centres for linking different trajectory segments, i.e., for linking end
 % bead position in one trajectory with start bead position in another trajectory.
@@ -96,9 +100,9 @@ image_label = '25';
 % bead_results = FindTrajectsBeads(image_label,start_frame,end_frame)
 % and
 % linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,data_set_label).
-% E.g., for frames 1 to 117 in video "210217r25.tif" in the current directory:
-t25 = FindTrajectsBeads(image_label,1,117);
-linkTrajSegmentsBeads(image_label,1,117,t25,'tests'); 
+% E.g., for frames 1 to 20 in video "210217r25.tif" in the current directory:
+t25 = FindTrajectsBeads(image_label,1,20);
+linkTrajSegmentsBeads(image_label,1,20,t25,'tests'); 
 % The above two lines generate an Excel file with all the trajectory data,
 % "tests_25_fullTrajs.xls", in the current directory folder, for further
 % analysis. This file contains two tabs with the parameters used in the
@@ -106,7 +110,7 @@ linkTrajSegmentsBeads(image_label,1,117,t25,'tests');
 % CentreX, CentreY (x and y bead-centre positions in pixels) and
 % TrajNumber, the Trajectory Number.
 % Note: make sure that the start_frame and end_frame values are kept the
-% same throughout all functions.
+% same throughout all functions!!
 
 save 'resultStructures' 't*' % save all result structures in a .mat file.
 
@@ -130,7 +134,7 @@ cd(data_folder); % return to data folder.
 % - 8a) Inspect tracks manually on a video to decide which to accept as good:
 % Use function:
 % good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_end,minPointsTraj)
-goThroughBeadTracksVideo(image_label,1,'end',10); 
+good_tracks = goThroughBeadTracksVideo(image_label,1,'end',10); 
 % The above generates the structure (after visually excluding tracks 4 and 5):  
 % good_tracks = 
 %            image_label: '25'
