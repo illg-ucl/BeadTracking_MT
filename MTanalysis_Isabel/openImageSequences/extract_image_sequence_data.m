@@ -24,14 +24,17 @@ function [numFrames frame_Ysize frame_Xsize image_data image_path] = extract_ima
 % ========================================
 %
 %
-% Read image sequence (.sif, .dv, .tif or .mat data) and return image data in a useful
+% Read image sequence (.sif, .dv, .tif, .m4v or .mat data) and return image data in a useful
 % form.
 %
-% Inputs: 
+% INPUTS: 
 % image_label: string that labels a given image sequence found in current
-% folder (e.g.'513', '490', etc...) 
+% folder. The code finds the path of the image file automatically based on a string label 
+% that is equal to the file name without the file extension. For example,
+% for image video file "210217r25.tif", an appropriate label would be the
+% string '210217r25'. This will be used throughout the entire RotTrack code.
 %
-% Outputs:
+% OUTPUTS:
 % numFrames: number of frames in the image sequence.
 % frame_Ysize: vertical (first dimension of matrix) size of image in pixels.
 % frame_Xsize: horizontal (second dimension of matrix) size of image in pixels.
@@ -44,18 +47,19 @@ function [numFrames frame_Ysize frame_Xsize image_data image_path] = extract_ima
 
 %% Initial stuff
 
-dvImagePath0 = dir(strcat('*',image_label,'*.dv')); % Image sequence data path if the image is a .dv file.
-sifImagePath0 = dir(strcat('*',image_label,'*.sif')); % Image sequence data path if the image is a .sif file.
-tifImagePath0 = dir(strcat('*',image_label,'*.tif')); % Image sequence data path if the image is a .tif file.
-matImagePath0 = dir(strcat('*',image_label,'*.mat')); % Image sequence data path if the image is a .mat file.
+dvImagePath0 = dir(strcat(image_label,'.dv')); % Image sequence data path if the image is a .dv file.
+sifImagePath0 = dir(strcat(image_label,'.sif')); % Image sequence data path if the image is a .sif file.
+tifImagePath0 = dir(strcat(image_label,'.tif')); % Image sequence data path if the image is a .tif file.
+m4vImagePath0 = dir(strcat(image_label,'.m4v')); % Image sequence data path if the image is a .m4v file.
+matImagePath0 = dir(strcat(image_label,'.mat')); % Image sequence data path if the image is a .mat file.
 
 % Error control:
 % Sometimes we use a .mat file containing the good track numbers with a name which contains also
 % the image sequence number and .mat, so in order to not think that is an
 % image sequence, we include the following lines.
-% If there is a .mat file and it contains the string "good_track_nums" in
+% If there is a .mat file and it contains the string "good_track_nums_" in
 % its name, then:
-if ~isempty(matImagePath0) && ~isempty(strfind(matImagePath0.name,'good_track_nums'))
+if ~isempty(matImagePath0) && ~isempty(strfind(matImagePath0.name,'good_track_nums_'))
     matImagePath0 = [];
 end
 
@@ -169,6 +173,43 @@ if isempty(tifImagePath0)==0
     
     
 
+end
+
+
+%% For .m4v files 
+
+if isempty(m4vImagePath0)==0
+    
+    image_path = m4vImagePath0.name;    
+    m4v_info = VideoReader(image_path);
+    % Add other useful info to final output:
+    frame_Ysize = m4v_info.Height;
+    frame_Xsize = m4v_info.Width;
+%     % Make the image be a square image:
+%     frame_Ysize = min(frame_Ysize,frame_Xsize);
+%     frame_Xsize = min(frame_Ysize,frame_Xsize);
+
+    % If by any chance the frame size is an odd number:
+    if mod(frame_Ysize,2)~=0 % modulus after division
+        frame_Ysize = frame_Ysize - 1;
+        frame_Xsize = frame_Xsize - 1;
+    end
+    
+    % To produce image data in final output form:
+    % Read in frames:
+    k = 1;
+    while hasFrame(m4v_info)
+        frame = readFrame(m4v_info);
+        frame = single(frame);  % to class single.
+        % frame = double(frame);  % to class double.
+        % Convert RGB values to grayscale values by forming a weighted sum
+        % of the R, G, and B components, see rgb2gray:
+        image_data(k).frame_data = 0.2989 * frame(:,:,1) + 0.5870 * frame(:,:,2) + 0.1140 * frame(:,:,3);
+        k = k+1;
+    end
+    
+    numFrames = k-1; % number of frames in sequence.    
+    
 end
 
 
