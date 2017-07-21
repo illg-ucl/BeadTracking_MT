@@ -163,7 +163,7 @@ trajXlsPath = trajXlsPath0.name;
 
 % Make new folder (new directory) to save trajectory analysis results:
 pos1 = strfind(trajXlsPath,'fullTrajs.xls'); % position of the start of the string 'fullTraj.xls' in the xls input file name.
-new_folder_name = trajXlsPath(1:(pos1-1)); % Take the name of the input excel file (with the end bit 'fullTraj.xls' removed) as the new folder name.
+new_folder_name = trajXlsPath(1:(pos1-2)); % Take the name of the input excel file (with the end bit 'fullTraj.xls' removed) as the new folder name.
 % Note that the directory "new_folder_name" is created by function
 % showTrajAnalysis2.m when called from this function.
 

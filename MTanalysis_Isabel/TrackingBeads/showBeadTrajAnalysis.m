@@ -181,7 +181,7 @@ disp(['The number of data points in this trajectory is: ',num2str(nPointsInTrack
 
 % Make new folder (new directory) to save trajectory analysis results:
 pos1 = strfind(trajXlsPath,'fullTrajs.xls'); % position of the start of the string 'fullTraj.xls' in the xls input file name.
-new_folder_name = trajXlsPath(1:(pos1-1)); % Take the name of the input excel file (with the end bit 'fullTraj.xls' removed) as the new folder name.
+new_folder_name = trajXlsPath(1:(pos1-2)); % Take the name of the input excel file (with the end bit 'fullTraj.xls' removed) as the new folder name.
 warning('off','MATLAB:MKDIR:DirectoryExists'); % Turn off warning: "Warning: Directory already exists." .
 mkdir(new_folder_name); % make new directory.
 
