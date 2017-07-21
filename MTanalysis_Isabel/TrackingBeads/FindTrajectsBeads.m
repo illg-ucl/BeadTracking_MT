@@ -26,8 +26,11 @@ function bead_results = FindTrajectsBeads(image_label,start_frame,end_frame)
 % Function to find all bead trajectories in an input image sequence.
 %
 % INPUTS:
-% - image_label: string such as '513', '490', etc., that appears in the
-% file name of the image sequence to be analysed, which is in the current folder.
+% - image_label: string that labels a given image sequence found in current
+% folder. The code finds the path of the image file automatically based on a string label 
+% that is equal to the file name without the file extension. For example,
+% for image video file "210217r25.tif", image_label would be the
+% string '210217r25'. Same throughout the entire BeadTracking_MT code.
 % - start_frame: first frame of the sequence to be analysed.
 % - end_frame: last frame of the sequence to be analysed.
 % 

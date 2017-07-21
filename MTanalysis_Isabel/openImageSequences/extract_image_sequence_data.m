@@ -31,8 +31,8 @@ function [numFrames frame_Ysize frame_Xsize image_data image_path] = extract_ima
 % image_label: string that labels a given image sequence found in current
 % folder. The code finds the path of the image file automatically based on a string label 
 % that is equal to the file name without the file extension. For example,
-% for image video file "210217r25.tif", an appropriate label would be the
-% string '210217r25'. This will be used throughout the entire RotTrack code.
+% for image video file "210217r25.tif", image_label would be the
+% string '210217r25'. Same throughout the entire BeadTracking_MT code.
 %
 % OUTPUTS:
 % numFrames: number of frames in the image sequence.

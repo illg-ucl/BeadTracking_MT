@@ -34,9 +34,13 @@ function good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_
 % contains the trajectory results, which should be in the same directory as the video file.
 %
 % INPUTS: 
-% - 'image_label' string that labels the image sequence under analysis, e.g. '101'.
-% - 'n_traj_start': first trajectory we want to analyse and check.
-% - 'n_traj_end': last trajectory we want to analyse and check. If the
+% - image_label: string that labels a given image sequence found in current
+% folder. The code finds the path of the image file automatically based on a string label 
+% that is equal to the file name without the file extension. For example,
+% for image video file "210217r25.tif", image_label would be the
+% string '210217r25'. Same throughout the entire BeadTracking_MT code.
+% - n_traj_start: first trajectory we want to analyse and check.
+% - n_traj_end: last trajectory we want to analyse and check. If the
 % string 'end' is entered, we go through to the last analysed trajectory.
 % - minPointsTraj: minimum number of data points that a trajectory must have in order to be
 % analised. A value of 3 is used for "showTrajAnalysis2.m" and

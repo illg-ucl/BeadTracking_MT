@@ -28,12 +28,16 @@ function linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,da
 % Trajectory data results are exported to an .xls file.
 %
 % INPUTS:
-% image_label: string such as '513', '490', etc... which corresponds to a certain label of image sequence.
-% start_frame and end_frames are the frames through which the loop runs to plot the result trajectories.
+% - image_label: string that labels a given image sequence found in current
+% folder. The code finds the path of the image file automatically based on a string label 
+% that is equal to the file name without the file extension. For example,
+% for image video file "210217r25.tif", image_label would be the
+% string '210217r25'. Same throughout the entire BeadTracking_MT code.
+% - start_frame and end_frame: are the frames through which the loop runs to plot the result trajectories.
 % They should be the same as previously used to produce bead_results using FindTrajectsBeads.m.
-% bead_results: parameters (bead_results{1}) and calculated trajectory segments (bead_results{2}). It is the output of function FindTrajects.m 
+% - bead_results: parameters (bead_results{1}) and calculated trajectory segments (bead_results{2}). It is the output of function FindTrajects.m 
 % (it is a cell array with two elements. The second one is a structure array containing all segment results).
-% data_set_label: is a user-defined label for the data set, that will form part of the name of the output excel file. E.g.: 'ATPase-GFP'.  
+% - data_set_label: is a user-defined label for the data set, that will form part of the name of the output excel file. E.g.: 'ATPase-GFP'.  
 %
 % Example of how to call this function:
 % linkTrajSegmentsBeads('490',100,110,s1,'ATPase-GFP'),

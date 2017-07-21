@@ -45,18 +45,22 @@ function processedManyTrajs = showManyBeadTrajAnalysis(image_label,n_traj_start,
 % contains the trajectory results, which should be in the same directory as the image sequence file.
 %
 % INPUTS: 
-% - 'image_label' string that labels the image sequence under analysis, e.g. '101'.
-% - 'n_traj_start': first trajectory we want to analyse and check.
-% - 'n_traj_end': last trajectory we want to analyse and check. If the
+% - image_label: string that labels a given image sequence found in current
+% folder. The code finds the path of the image file automatically based on a string label 
+% that is equal to the file name without the file extension. For example,
+% for image video file "210217r25.tif", image_label would be the
+% string '210217r25'. Same throughout the entire BeadTracking_MT code.
+% - n_traj_start: first trajectory we want to analyse and check.
+% - n_traj_end: last trajectory we want to analyse and check. If the
 % string 'end' is entered, we go through to the last analysed trajectory.
-% - 'start_frame' is the number of frame considered as the origin of time
+% - start_frame is the number of frame considered as the origin of time
 % (as t=0), in frames. It is the first frame for which the shutter is fully open and detecting images.
-% - 'tsamp' is the sampling time (time between frames in seconds), used to calibrate the absolute time, to go from frames to time in seconds. 
+% - tsamp: sampling time (time between frames in seconds), used to calibrate the absolute time, to go from frames to time in seconds. 
 % Use tsamp = 1 for the time to be in units of frames. A proper calibration
 % would have tsamp = 40*10^(-3), i.e., 40ms per frame, for example.
 % start_frame*tsamp is therefore the absolute time origin in seconds.
-% - 'pixelsize_nm': pixel size in nm (e.g. 35.333nm for fluorescence data).
-% - 'showVideo' is an input parameter to show a video of the trajectory
+% - pixelsize_nm: pixel size in nm (e.g. 35.333nm for fluorescence data).
+% - showVideo: input parameter to show a video of the trajectory
 % overlaid on the image sequence or not.
 % - minPointsTraj: Minimum number of data points that a trajectory must have in order to be
 % analised (default minPointsTraj = 10, at least 3). 
