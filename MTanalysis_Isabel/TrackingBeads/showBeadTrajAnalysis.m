@@ -606,7 +606,7 @@ agree_track_flags = 1;
 % Move into folder previously created to save traj analysis results and
 % SAVE current FIGURE as a .png (at screen size) and then close the figure window:
 % Result figure files are saved in a new folder within the same directory where the input excel file was.
-figName = strcat(new_folder_name,'_figResults_traj',num2str(n_traj)); % name of figure file to save to. 
+figName = strcat(new_folder_name,'_figResults_traj',num2str(n_traj),'.png'); % name of figure file to save to. 
 saveFigurePNG(new_folder_name,figName); % See saveFigurePNG.m.
 
 

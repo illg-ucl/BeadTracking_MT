@@ -167,5 +167,5 @@ end
 pause(0.1); % this pause is needed to give time for the plot to appear
 hold off;
 % SAVE current FIGURE as a .png and then close the figure window:
-figName = strcat('Traj_Numbers_',image_label); % choose name of figure file for saving .png.
+figName = strcat('Traj_Numbers_',image_label,'.png'); % choose name of figure file for saving .png.
 saveFigurePNG(cd,figName); % Save file in current directory. See saveFigurePNG.m.
