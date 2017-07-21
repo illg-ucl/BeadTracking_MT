@@ -121,7 +121,7 @@ linkTrajSegmentsBeads(image_label,1,20,t25,data_set_label);
 % Note: make sure that the start_frame and end_frame values are kept the
 % same throughout all functions!!
 
-save 'resultStructures' 't*' % save all result structures in a .mat file.
+save 'resultStructures.mat' 't*' % save all result structures in a .mat file.
 
 % - 8. Plot and save a .png image of the Trajectory Numbers for the found
 % beads overlaid on top of first frame of the video.
@@ -168,7 +168,7 @@ good_tracks.n_traj_end = 26;
 good_tracks.minPointsTraj = 10;
 good_tracks.good_track_numbers = [1:3 6:26]; % All tracks from 1 to 26 except for tracks 4 and 5.
 % Save result (as a .mat file, required for further analysis functions):
-output_filename = strcat('good_track_nums_',image_label);
+output_filename = strcat('good_track_nums_',image_label,'.mat');
 save(output_filename,'good_tracks') % save variable good_tracks2.
 % NOTE: make sure you don't change the name 'good_tracks' to anything else.
 % It is used later by function showManyParticleTrajAanalysis.m.
