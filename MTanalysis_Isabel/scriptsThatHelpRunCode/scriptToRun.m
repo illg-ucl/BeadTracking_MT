@@ -130,7 +130,7 @@ save 'resultStructures.mat' 't*' % save all result structures in a .mat file.
 % it to be considered (we don't want to analyse tracks with only a few
 % points that might appear due to suboptimal tracking when two beads are
 % very close together):
-plotBeadTrajNumbers(image_label,10)
+plotBeadTrajNumbers(image_label,data_set_label,10)
 cd(data_folder); % return to data folder.
 
 % Note: the code does not work optimally for beads that are close together
@@ -142,8 +142,8 @@ cd(data_folder); % return to data folder.
 % - 9. Select good tracks. Two alternative methods:
 % - 9a) Inspect tracks manually on a video to decide which to accept as good:
 % Use function:
-% good_tracks = goThroughBeadTracksVideo(image_label,n_traj_start,n_traj_end,minPointsTraj)
-good_tracks = goThroughBeadTracksVideo(image_label,1,'end',10); 
+% good_tracks = goThroughBeadTracksVideo(image_label,data_set_label,n_traj_start,n_traj_end,minPointsTraj)
+good_tracks = goThroughBeadTracksVideo(image_label,data_set_label,1,'end',10); 
 % The above generates the structure (after visually excluding tracks 4 and 5):  
 % good_tracks = 
 %            image_label: '25'
@@ -177,10 +177,8 @@ save(output_filename,'good_tracks') % save variable good_tracks2.
 % This is based on functions showBeadTrajAnalysis.m and
 % showManyBeadTrajAnalysis.m
 % Running the line below produces one analysis excel file and graph per track:
-% processedManyTrajs = showManyBeadTrajAnalysis(image_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,minPointsTraj)
-showManyBeadTrajAnalysis('25',1,'end',1,1,100,0,10);
-
-
+% processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,minPointsTraj)
+showManyBeadTrajAnalysis(image_label,data_set_label,1,'end',1,1,100,0,10);
 
 
 
