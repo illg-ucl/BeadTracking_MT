@@ -113,6 +113,8 @@ minPointsTraj = 10;
 % linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,data_set_label).
 % E.g., for frames 1 to 20 in video "210217r25.tif" in the current directory:
 t25 = FindTrajectsBeads(image_label,1,20);
+save 'resultStructures.mat' 't*' % save all result structures in a .mat file.
+
 linkTrajSegmentsBeads(image_label,1,20,t25,data_set_label); 
 % The above two lines generate an Excel file with all the trajectory data,
 % "tests_25_fullTrajs.xls", in the current directory folder, for further
@@ -123,7 +125,6 @@ linkTrajSegmentsBeads(image_label,1,20,t25,data_set_label);
 % Note: make sure that the start_frame and end_frame values are kept the
 % same throughout all functions!!
 close all
-save 'resultStructures.mat' 't*' % save all result structures in a .mat file.
 
 % - 8. Plot and save a .png image of the Trajectory Numbers for the found
 % beads overlaid on top of first frame of the video.

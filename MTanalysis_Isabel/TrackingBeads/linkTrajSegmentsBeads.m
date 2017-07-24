@@ -35,7 +35,7 @@ function linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,da
 % string '210217r25'. Same throughout the entire BeadTracking_MT code.
 % - start_frame and end_frame: are the frames through which the loop runs to plot the result trajectories.
 % They should be the same as previously used to produce bead_results using FindTrajectsBeads.m.
-% - bead_results: parameters (bead_results{1}) and calculated trajectory segments (bead_results{2}). It is the output of function FindTrajects.m 
+% - bead_results: parameters (bead_results{1}) and calculated trajectory segments (bead_results{2}). It is the output of function FindTrajectsBeads.m 
 % (it is a cell array with two elements. The second one is a structure array containing all segment results).
 % - data_set_label: is a user-defined label for the data set, that will form part of the name of the output excel file. E.g.: 'ATPase-GFP'.  
 %
