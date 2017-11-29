@@ -74,9 +74,13 @@ angle_step = 2; % angle step in degrees. Default = 2.
 radial_step = 1; % rho step in pixels. Default = 1.
 % Additional background subtraction: 1 for yes, 0 for no.
 additional_bgnd_subtract = 0; % Default = 0 if background-subtracted image is used as input.
-% Half-number of points to fit to a parabola in peak of cross-correlations.
+% N_tofit: Half-number of points to fit to a parabola in peak of cross-correlations.
 % Default = 3.
 N_tofit = 3; % number of points to fit at either side of the centre in the central peak of the cross-correlation.
+guessA_fitXY = 1; % guess for parameter A for parabolic fit of central peak of cross-correlation, for both X and Y fits
+% Default guessA_fitXY for magnetic beads (Crick): 1.
+guessB_fitXY = -0.03; % guess for parameter B for parabolic fit of central peak of cross-correlation, for both X and Y fits
+% Default guessB_fitXY for magnetic beads (Crick): -0.005.
 %-----------------
 
 % % Aid plot: plot original frame and estimate centre position
@@ -373,28 +377,28 @@ else
     
     % % Aid plots:
     % % plot of vertical average profile:
-    % figure;
-    % subplot(2,2,1)
-    % plot(radial_distance,profile_V)
-    % xlabel('y (pixels)')
-    % ylabel('Intensity (arb)')
-    % title('Vertical intensity profile of bead (average over 90deg vertical cones)')
-    % % plot of vertical average profile:
-    % subplot(2,2,2)
-    % plot(radial_distance,profile_H)
-    % xlabel('x (pixels)')
-    % ylabel('Intensity (arb)')
-    % title('Horizontal intensity profile of bead (average over 90deg horizontal cones)')
-    % % plot of vertical cross-correlation:
-    % subplot(2,2,3)
-    % plot(steps_corY,crossCorr_Y,'x')
-    % xlabel('y (pixels)')
-    % ylabel('normalised cross correlation (arb)')
-    % % plot of horizontal cross-correlation:
-    % subplot(2,2,4)
-    % plot(steps_corX,crossCorr_X,'x')
-    % xlabel('x (pixels)')
-    % ylabel('normalised cross correlation (arb)')
+%     figure;
+%     subplot(2,2,1)
+%     plot(radial_distance,profile_V)
+%     xlabel('y (pixels)')
+%     ylabel('Intensity (arb)')
+%     title('Vertical intensity profile of bead (average over 90deg vertical cones)')
+%     % plot of vertical average profile:
+%     subplot(2,2,2)
+%     plot(radial_distance,profile_H)
+%     xlabel('x (pixels)')
+%     ylabel('Intensity (arb)')
+%     title('Horizontal intensity profile of bead (average over 90deg horizontal cones)')
+%     % plot of vertical cross-correlation:
+%     subplot(2,2,3)
+%     plot(steps_corY,crossCorr_Y,'x')
+%     xlabel('y (pixels)')
+%     ylabel('normalised cross correlation (arb)')
+%     % plot of horizontal cross-correlation:
+%     subplot(2,2,4)
+%     plot(steps_corX,crossCorr_X,'x')
+%     xlabel('x (pixels)')
+%     ylabel('normalised cross correlation (arb)')
     
     
     %% Use obtained cross-correlations to get correction to bead-centre position:
@@ -409,7 +413,7 @@ else
     y_data = crossCorr_X(mid_pos-N_tofit:mid_pos+N_tofit); % data to fit.
     fun_for_fit = fittype('A+B*(x-x0)^2','independent','x'); % define parabolic funtion to fit to, with 'x' as independent variable;
     options = fitoptions('Method','NonlinearLeastSquares'); % Creates a structure of fit options with fields StartPoint, Lower, Upper, etc.
-    options.StartPoint = [1 -0.005 0]; % give guess parameters for fit. This avoids a warning message.
+    options.StartPoint = [guessA_fitXY guessB_fitXY 0]; % give guess parameters for fit. This avoids a warning message.
     % guess for I0 is the max value of I in the background corrected image subarray.
     % options.Lower = [min_A min_B min_x0]; % Lower bounds for fit parameters.
     % options.Upper = [max_A max_B max_x0]; % Upper bounds for fit parameters.
@@ -427,16 +431,16 @@ else
     % errorSTDEV = (errors(2,:)-errors(1,:))/2; % Standard deviation of each fit parameter (probability to be between -STDEV and +STDEV is 68.2%).
     
     % % Aid plots:
-    % x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
-    % y_fitted = A_fitX+B_fitX*(x_data2-x0_fitX).^2;
-    % figure;
-    % subplot(1,2,1)
-    % plot(x_data,y_data,'o');
-    % hold on;
-    % xlabel('x corr')
-    % ylabel('cross-correl along X')
-    % plot(x_data2,y_fitted);
-    % title(strcat('x0 = ',num2str(x0_fitX),' pix'))
+%     x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
+%     y_fitted = A_fitX+B_fitX*(x_data2-x0_fitX).^2;
+%     figure;
+%     subplot(1,2,1)
+%     plot(x_data,y_data,'o');
+%     hold on;
+%     xlabel('x corr')
+%     ylabel('cross-correl along X')
+%     plot(x_data2,y_fitted);
+%     title(strcat('x0 = ',num2str(x0_fitX),' pix'))
     
     % Fit cross-correlation to a parabola along Y:
     % N_tofit same as before.
@@ -454,16 +458,16 @@ else
     % errorSTDEV = (errors(2,:)-errors(1,:))/2; % Standard deviation of each fit parameter (probability to be between -STDEV and +STDEV is 68.2%).
     
     % % Auxiliary plots:
-    % x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
-    % y_fitted = A_fitY+B_fitY*(x_data2-x0_fitY).^2;
-    % subplot(1,2,2)
-    % plot(x_data,y_data,'o');
-    % hold on;
-    % xlabel('y corr')
-    % ylabel('cross-correl along Y')
-    % plot(x_data2,y_fitted);
-    % title(strcat('y0 = ',num2str(x0_fitY),' pix'))
-    
+    %     x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
+    %     y_fitted = A_fitY+B_fitY*(x_data2-x0_fitY).^2;
+    %     subplot(1,2,2)
+    %     plot(x_data,y_data,'o');
+    %     hold on;
+    %     xlabel('y corr')
+    %     ylabel('cross-correl along Y')
+    %     plot(x_data2,y_fitted);
+    %     title(strcat('y0 = ',num2str(x0_fitY),' pix'))
+
     % The displacements x0_fitX and x0_fitY obtained from fitting the
     % cross-correlation peaks are equal to twice the actual displacement of the
     % bead centre from the centre of the subarray:
@@ -474,8 +478,8 @@ else
     y_new = round(y_estimate)+delta_Y;
     
     % % Return result:
-    % disp(['new x_centre estimate = ',num2str(x_new)])
-    % disp(['new y_centre estimate = ',num2str(y_new)])
+%     disp(['new x_centre estimate = ',num2str(x_new)])
+%     disp(['new y_centre estimate = ',num2str(y_new)])
     
     
     %% Output of the function:
