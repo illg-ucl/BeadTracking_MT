@@ -247,7 +247,7 @@ if unique([traj_results.TrajNumber])<=1
     disp('NOTE: there is only one trajectory in the input data. This trajectory has been sent to an excel file.')
     % Export initial sorted trajectory data (before linking trajectory segments):
     data_to_export_sorted = [data_to_export_labels; num2cell(data_to_export_sorted)]; % Add as a first row the fieldnames (labels for each column).
-    output_filename = strcat(data_set_label,'_',image_label,'fullTrajs.xls'); % output .xls filename (before sorting data by trajectory number)
+    output_filename = strcat(data_set_label,'_',image_label,'_fullTrajs.xls'); % output .xls filename (before sorting data by trajectory number)
     xlswrite(output_filename,data_to_export_sorted); % write data to excelfile.
     % the previous data contains only beads which have been linked into a
     % trajectory.
@@ -255,7 +255,7 @@ if unique([traj_results.TrajNumber])<=1
     % Export also all (non-empty) beads in the input (traj_results) structure, even if they have not been linked into trajectories, i.e.,
     % export "all_data_to_export":
     all_data_to_export_2 = [data_to_export_labels; num2cell(all_data_to_export)]; % Add as a first row the fieldnames (labels for each column).
-    output_filename = strcat(data_set_label,'_',image_label,'allbeads.xls'); % output .xls filename (before sorting data by trajectory number)
+    output_filename = strcat(data_set_label,'_',image_label,'_allbeads.xls'); % output .xls filename (before sorting data by trajectory number)
     xlswrite(output_filename,all_data_to_export_2); % write data to excel file.
     
     return % exit function
