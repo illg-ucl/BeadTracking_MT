@@ -69,11 +69,11 @@ image_label = '210217r25';
 % - 5. PARAMETERS: There are a number of important parameters that need to be set right.
 % These are within functions FindTrajectsBeads.m and
 % linkTrajSegmentsBeads.m. Find these functions in the
-% "BeadTracking_MT\MTanalysis_Isabel" folder that contains the source code
+% "BeadTracking_MT\MTanalysis_Isabel\TrackingBeads\" folder that contains the source code
 % and tweak these parameters on the PARAMETERS section at the beginning of
 % each .m file.
 %
-% The key parameters in BeadTracking_MT\MTanalysis_Isabel\TrackingBeadsFindTrajectsBeads.m are:
+% The key parameters in BeadTracking_MT\MTanalysis_Isabel\TrackingBeads\FindTrajectsBeads.m are:
 % - subarray_halfwidth (Default: 60 pixels). Halfwidth of image square subarray which includes bead and background around it.
 % - inner_circle_radius (Default: 50 pixels); Radius of circular mask that contains the entire bead. 
 % - d_01_max (Default: 30 pixels); Max distance in pixels between bead
