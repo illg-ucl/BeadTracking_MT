@@ -68,7 +68,8 @@ d_min = 10; % minimum subarray halfsize in pixels. If candidate bead centre too 
 % Choose method 1 or method 2 for averaging radial profiles.
 % Method 1: averages radial profiles over hemispheres.
 % Method 2: averages radial profiles over quarters, -45deg to 45deg, etc.
-averagingMethod = 2; % Default = 2.
+% averagingMethod = 2; % Default = 2 (for things with good spherical symmetry, similar on X and Y).
+averagingMethod = 1; % 1 for things a bit different on X and Y.
 % Step size for rho and angle, for converting image to a polar grid:
 angle_step = 2; % angle step in degrees. Default = 2.
 radial_step = 1; % rho step in pixels. Default = 1.
