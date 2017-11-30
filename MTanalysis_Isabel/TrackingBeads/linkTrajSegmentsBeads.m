@@ -248,16 +248,22 @@ if unique([traj_results.TrajNumber])<=1
     % Export initial sorted trajectory data (before linking trajectory segments):
     data_to_export_sorted = [data_to_export_labels; num2cell(data_to_export_sorted)]; % Add as a first row the fieldnames (labels for each column).
     output_filename = strcat(data_set_label,'_',image_label,'_fullTrajs.xls'); % output .xls filename (before sorting data by trajectory number)
-    xlswrite(output_filename,data_to_export_sorted); % write data to excelfile.
+    warning off MATLAB:xlswrite:AddSheet % turn warning off when new sheet added to excel file.
+    xlswrite(output_filename,data_to_export_sorted,'Track results'); % write data to excelfile.
     % the previous data contains only beads which have been linked into a
     % trajectory.
-    
+    % Params for "FindTrajects.m":
+    dataForSheet1 = [fieldnames(params_for_FindTrajects) struct2cell(params_for_FindTrajects)];
+    xlswrite(output_filename,dataForSheet1,'params FindTrajectsBeads'); % write data with parameters for "FindTrajects.m" to sheet 'params FindTrajects' in excel file.
+    % Params for "linkTrajSegments.m":
+    dataForSheet2 = [fieldnames(params) struct2cell(params)];        
+    xlswrite(output_filename,dataForSheet2,'params linkTrajSegmentsBeads'); % write data with parameters for "linkTrajSegments.m" to sheet 'params linkTrajSegments' in excel file.
+        
     % Export also all (non-empty) beads in the input (traj_results) structure, even if they have not been linked into trajectories, i.e.,
     % export "all_data_to_export":
     all_data_to_export_2 = [data_to_export_labels; num2cell(all_data_to_export)]; % Add as a first row the fieldnames (labels for each column).
     output_filename = strcat(data_set_label,'_',image_label,'_allbeads.xls'); % output .xls filename (before sorting data by trajectory number)
     xlswrite(output_filename,all_data_to_export_2); % write data to excel file.
-    
     return % exit function
 end
 
