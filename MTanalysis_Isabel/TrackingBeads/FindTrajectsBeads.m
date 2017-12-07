@@ -1,4 +1,4 @@
-function bead_results = FindTrajectsBeads(image_label,start_frame,end_frame)
+function bead_results = FindTrajectsBeads(image_label,start_frame,end_frame,excludedRegions)
 % 
 % ========================================
 % BeadTracking_MT.
@@ -34,6 +34,20 @@ function bead_results = FindTrajectsBeads(image_label,start_frame,end_frame)
 % - start_frame: first frame of the sequence to be analysed.
 % - end_frame: last frame of the sequence to be analysed. One can write
 % 'end' if this is not known.
+% - excludedRegions: to exclude certain regions from image. 
+% Enter [] (so that isempty(excludedRegions) = 1) if you
+% don't want to exclude any regions.
+% Input a structure as follows to exclude one or several regions.
+% Regions to exclude are given by start coordinates (x_start, y_start) for
+% top left corner of rectangle on image and end coordinates (x_end, y_end)
+% for bottom right corner of rectangle. Coordinates delimit rectangular
+% boxes on image and several rectangles can be defined. All rectangles are
+% put together in structure input excludedRegions:
+% Example, for Sonia's images we exclude the following regions:
+% excludedRegions.list_xstart = [1 1 1 130];
+% excludedRegions.list_xend = [820 112 100 215];
+% excludedRegions.list_ystart = [581 492 1 1];
+% excludedRegions.list_yend = [614 580 175 54];
 % 
 % Example of how to call this function: 
 % for frames 1 to 10 of image "Heiko_Thu Jun 24 2010_554.sif" in current folder:
@@ -143,8 +157,8 @@ max_num_candidates = 200; % should be around 200.
 params.max_num_candidates = max_num_candidates;
 
 % PARAMETERS for finding bead centres (see findBeadCentre1frame.m, inputs to the function):
-subarray_halfwidth = 60; % (Default: 60 pixels). Halfwidth of image square subarray which includes bead and background around it.
-inner_circle_radius = 50; % (Default: 50 pixels). Radius of circular mask around bead. 
+subarray_halfwidth = 14; % (Default: 60 pixels). Halfwidth of image square subarray which includes bead and background around it.
+inner_circle_radius = 8; % (Default: 50 pixels). Radius of circular mask around bead. 
 % Save parameters to results as structure "params":
 params.subarray_halfwidth = subarray_halfwidth;
 params.inner_circle_radius = inner_circle_radius;
@@ -244,6 +258,8 @@ disp(['frame number: ',num2str(start_frame)]) % print frame number to Command Wi
 % They contain integer numbers: coordinates or pixel numbers which give
 % position on image plane.
 
+disp(['no. of initial bead candidate positions: ',num2str(length(candidate_X_000))])
+
 % % REGION OF INTEREST: accept only beads within ROI (UNUSED).
 % % A SignalMask can potentially be used to select a region of interest in the future. For now, it does nothing. 
 % SignalMask = ones(size(frame,1),size(frame,2));
@@ -259,11 +275,20 @@ disp(['frame number: ',num2str(start_frame)]) % print frame number to Command Wi
 % end
 % disp(['no. of new candidate bead positions on start frame: ',num2str(length(candidate_X_00))])
 
-% Without using a ROI:
-candidate_X_00 = candidate_X_000;
-candidate_Y_00 = candidate_Y_000;
+% Exclude certain regions from image (see INPUT excludedRegions):
+if isempty(excludedRegions) == 1 % do not exclude any regions of image
+    candidate_X_00 = candidate_X_000;
+    candidate_Y_00 = candidate_Y_000;
+else
+    list_xstart = excludedRegions.list_xstart;
+    list_xend = excludedRegions.list_xend;
+    list_ystart = excludedRegions.list_ystart;
+    list_yend = excludedRegions.list_yend;
+    [candidate_X_00,candidate_Y_00] = excludeRegions(candidate_X_000,candidate_Y_000,list_xstart,list_xend,list_ystart,list_yend);
+end
 
-disp(['no. of initial bead candidate positions: ',num2str(length(candidate_X_00))])
+disp(['no. of total candidate particle positions after excluding certain regions (as input)): ',num2str(length(candidate_X_00))])
+
 
 % Error control:
 % Limit the max number of candidate spots (if eg. 260000 candidate spots are
@@ -377,6 +402,8 @@ for k = (start_frame+1):end_frame
     % the subindex "_000" in candidate_X_000 indicates newly found bead
     % candidates for the current frame. 
     
+    disp(['no. of initial bead candidate positions: ',num2str(length(candidate_X_000))])
+    
     % % Reject candidate spots outside ROI (SignalMask) (to speed up algorithm):
     % candidate_X_00 = []; % initialise empty vectors before loop.
     % candidate_Y_00 = [];
@@ -388,11 +415,22 @@ for k = (start_frame+1):end_frame
     %    end
     % end
     % disp(['no. of new candidate bead positions on start frame: ',num2str(length(candidate_X_00))])
-    %------------------------------------- 
+    %-------------------------------------
     
-    % Without using a ROI:
-    candidate_X_00 = candidate_X_000;
-    candidate_Y_00 = candidate_Y_000;
+    % Exclude certain regions from image (see INPUT excludedRegions):
+    if isempty(excludedRegions) == 1 % do not exclude any regions of image
+        candidate_X_00 = candidate_X_000;
+        candidate_Y_00 = candidate_Y_000;
+    else
+        list_xstart = excludedRegions.list_xstart;
+        list_xend = excludedRegions.list_xend;
+        list_ystart = excludedRegions.list_ystart;
+        list_yend = excludedRegions.list_yend;
+        [candidate_X_00,candidate_Y_00] = excludeRegions(candidate_X_000,candidate_Y_000,list_xstart,list_xend,list_ystart,list_yend);
+    end
+    
+    disp(['no. of total candidate particle positions after excluding certain input regions): ',num2str(length(candidate_X_00))])
+
     
     % Error control:
     % Limit the max number of candidate bead positions (if eg. 260000 candidates are
@@ -405,18 +443,16 @@ for k = (start_frame+1):end_frame
         disp(['NOTE!! no. of candidate bead positions has been limited to ',num2str(max_num_candidates)])
     end
     
+    % Eliminate candidate positions closer to each other than d_coincid_cand (3 pixels):
+    [candidate_X_0,candidate_Y_0,pos_to_keep1] = eliminateCoincidentPositions(candidate_X_00,candidate_Y_00,d_coincid_cand);
+    
+    disp(['no. of total candidate bead positions after eliminating coincidences: ',num2str(length(candidate_X_0))])
+    
     % % Check graphically:
     % imshow(frame,[]);
     % hold on;
     % plot(candidate_X_0,candidate_Y_0,'*');
     % figure;
-    
-    disp(['no. of initial bead candidate positions: ',num2str(length(candidate_X_00))])
-    
-    % Eliminate candidate positions closer to each other than d_coincid_cand (3 pixels):
-    [candidate_X_0,candidate_Y_0,pos_to_keep1] = eliminateCoincidentPositions(candidate_X_00,candidate_Y_00,d_coincid_cand);
-    
-    disp(['no. of total candidate bead positions after eliminating coincidences: ',num2str(length(candidate_X_0))])
     
     % Subtract background from entire frame (method 1 is faster) considering bead candidate positions:
     frameNoBgnd = removeBgnd(frame,candidate_X_0,candidate_Y_0,inner_circle_radius,subarray_halfwidth,1);
