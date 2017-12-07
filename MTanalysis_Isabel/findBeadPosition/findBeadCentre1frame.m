@@ -8,11 +8,11 @@ function bead = findBeadCentre1frame(frameNoBgnd,x_estimate,y_estimate,inner_rad
 % This program is free software: you can redistribute it and/or modify it under the terms of the BSD 2-Clause License.
 % This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the BSD 2-Clause License for more details. You should have received a copy of the BSD 2-Clause License along with this program.
 % Citation: If you use this software for your data analysis please acknowledge it in your publications and cite as follows.
-% -	Citation example 1: 
-% BeadTracking_MT software. (Version). 2017. Isabel Llorente-Garcia, 
+% -	Citation example 1:
+% BeadTracking_MT software. (Version). 2017. Isabel Llorente-Garcia,
 % Dept. of Physics and Astronomy, University College London, United Kingdom.
 % https://github.com/illg-ucl/BeadTracking_MT. (Download date).
-% 
+%
 % -	Citation example 2:
 % @Manual{... ,
 % title  = {BeadTracking_MT software. (Version).},
@@ -143,7 +143,7 @@ if d < d_min
     bead.TooCloseToEdge = tooCloseToEdge; % 1 if bead candidate was closer to edge of image than d_min.
     
 else
-         
+    
     %% Create image subarray (I) around bead:
     % Create image subarray of size (2*d+1)x(2*d+1) centered on (x_estimate,y_estimate) centroid estimate:
     I = frameNoBgnd(round(y_estimate)-d:round(y_estimate)+d,round(x_estimate)-d:round(x_estimate)+d);
@@ -378,28 +378,28 @@ else
     
     % % Aid plots:
     % % plot of vertical average profile:
-%     figure;
-%     subplot(2,2,1)
-%     plot(radial_distance,profile_V)
-%     xlabel('y (pixels)')
-%     ylabel('Intensity (arb)')
-%     title('Vertical intensity profile of bead (average over 90deg vertical cones)')
-%     % plot of vertical average profile:
-%     subplot(2,2,2)
-%     plot(radial_distance,profile_H)
-%     xlabel('x (pixels)')
-%     ylabel('Intensity (arb)')
-%     title('Horizontal intensity profile of bead (average over 90deg horizontal cones)')
-%     % plot of vertical cross-correlation:
-%     subplot(2,2,3)
-%     plot(steps_corY,crossCorr_Y,'x')
-%     xlabel('y (pixels)')
-%     ylabel('normalised cross correlation (arb)')
-%     % plot of horizontal cross-correlation:
-%     subplot(2,2,4)
-%     plot(steps_corX,crossCorr_X,'x')
-%     xlabel('x (pixels)')
-%     ylabel('normalised cross correlation (arb)')
+    %     figure;
+    %     subplot(2,2,1)
+    %     plot(radial_distance,profile_V)
+    %     xlabel('y (pixels)')
+    %     ylabel('Intensity (arb)')
+    %     title('Vertical intensity profile of bead (average over 90deg vertical cones)')
+    %     % plot of vertical average profile:
+    %     subplot(2,2,2)
+    %     plot(radial_distance,profile_H)
+    %     xlabel('x (pixels)')
+    %     ylabel('Intensity (arb)')
+    %     title('Horizontal intensity profile of bead (average over 90deg horizontal cones)')
+    %     % plot of vertical cross-correlation:
+    %     subplot(2,2,3)
+    %     plot(steps_corY,crossCorr_Y,'x')
+    %     xlabel('y (pixels)')
+    %     ylabel('normalised cross correlation (arb)')
+    %     % plot of horizontal cross-correlation:
+    %     subplot(2,2,4)
+    %     plot(steps_corX,crossCorr_X,'x')
+    %     xlabel('x (pixels)')
+    %     ylabel('normalised cross correlation (arb)')
     
     
     %% Use obtained cross-correlations to get correction to bead-centre position:
@@ -420,55 +420,66 @@ else
     % options.Upper = [max_A max_B max_x0]; % Upper bounds for fit parameters.
     options.MaxFunEvals = 3000;
     options.MaxIter = 3000;
-    [fit_result gof] = fit(x_data,y_data,fun_for_fit,options); % do fit. fit_result contains the fit coefficient values and their confidence intervals and "gof" gives the good of fitness.
-    % fit_param_names = coeffnames(fit_result); % fit parameter names, to get
-    % their order: A, B, x0.
-    fit_param_values = coeffvalues(fit_result); % parameter values resulting from fit.
-    A_fitX = fit_param_values(1);
-    B_fitX = fit_param_values(2);
-    x0_fitX = fit_param_values(3);
-    rsq_fitX = gof.rsquare; % rsquare coefficient of fit.
-    % errors = confint(fit_result,0.682); % 68.2% confidence interval for each fit parameter (lower and upper bounds as first and second rows).
-    % errorSTDEV = (errors(2,:)-errors(1,:))/2; % Standard deviation of each fit parameter (probability to be between -STDEV and +STDEV is 68.2%).
-    
-    % % Aid plots:
-%     x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
-%     y_fitted = A_fitX+B_fitX*(x_data2-x0_fitX).^2;
-%     figure;
-%     subplot(1,2,1)
-%     plot(x_data,y_data,'o');
-%     hold on;
-%     xlabel('x corr')
-%     ylabel('cross-correl along X')
-%     plot(x_data2,y_fitted);
-%     title(strcat('x0 = ',num2str(x0_fitX),' pix'))
-    
+    % Error control: avoid errors when trying to fit data with NaN elements:
+    if sum(isnan(y_data))==0 % if there are no NaN numbers in y_data, do the fit:
+        [fit_result gof] = fit(x_data,y_data,fun_for_fit,options); % do fit. fit_result contains the fit coefficient values and their confidence intervals and "gof" gives the good of fitness.
+        % fit_param_names = coeffnames(fit_result); % fit parameter names, to get
+        % their order: A, B, x0.
+        fit_param_values = coeffvalues(fit_result); % parameter values resulting from fit.
+        A_fitX = fit_param_values(1);
+        B_fitX = fit_param_values(2);
+        x0_fitX = fit_param_values(3);
+        rsq_fitX = gof.rsquare; % rsquare coefficient of fit.
+        % errors = confint(fit_result,0.682); % 68.2% confidence interval for each fit parameter (lower and upper bounds as first and second rows).
+        % errorSTDEV = (errors(2,:)-errors(1,:))/2; % Standard deviation of each fit parameter (probability to be between -STDEV and +STDEV is 68.2%).
+        
+        % % Aid plots:
+        %     x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
+        %     y_fitted = A_fitX+B_fitX*(x_data2-x0_fitX).^2;
+        %     figure;
+        %     subplot(1,2,1)
+        %     plot(x_data,y_data,'o');
+        %     hold on;
+        %     xlabel('x corr')
+        %     ylabel('cross-correl along X')
+        %     plot(x_data2,y_fitted);
+        %     title(strcat('x0 = ',num2str(x0_fitX),' pix'))
+    else % if there are NaN values, do not fit and just save empty values:
+        x0_fitX = [];
+        rsq_fitX = 0;
+    end
     % Fit cross-correlation to a parabola along Y:
     % N_tofit same as before.
     mid_pos = 1+(length(crossCorr_Y)-1)/2; % position of middle point in cross-correlation.
     x_data = steps_corY(mid_pos-N_tofit:mid_pos+N_tofit)'; % data to fit, independent variable.
     y_data = crossCorr_Y(mid_pos-N_tofit:mid_pos+N_tofit); % data to fit.
     % fun_for_fit and options same as before: fun_for_fit = fittype('A+B*(x-x0)^2','independent','x');
-    [fit_result gof] = fit(x_data,y_data,fun_for_fit,options); % do fit. fit_result contains the fit coefficient values and their confidence intervals and "gof" gives the good of fitness.
-    fit_param_values = coeffvalues(fit_result); % parameter values resulting from fit.
-    A_fitY = fit_param_values(1);
-    B_fitY = fit_param_values(2);
-    x0_fitY = fit_param_values(3);
-    rsq_fitY = gof.rsquare; % rsquare coefficient of fit.
-    % errors = confint(fit_result,0.682); % 68.2% confidence interval for each fit parameter (lower and upper bounds as first and second rows).
-    % errorSTDEV = (errors(2,:)-errors(1,:))/2; % Standard deviation of each fit parameter (probability to be between -STDEV and +STDEV is 68.2%).
+    % Error control (same as before): avoid errors when trying to fit data with NaN elements:
+    if sum(isnan(y_data))==0 % if there are no NaN numbers in y_data, do the fit:
+        [fit_result gof] = fit(x_data,y_data,fun_for_fit,options); % do fit. fit_result contains the fit coefficient values and their confidence intervals and "gof" gives the good of fitness.
+        fit_param_values = coeffvalues(fit_result); % parameter values resulting from fit.
+        A_fitY = fit_param_values(1);
+        B_fitY = fit_param_values(2);
+        x0_fitY = fit_param_values(3);
+        rsq_fitY = gof.rsquare; % rsquare coefficient of fit.
+        % errors = confint(fit_result,0.682); % 68.2% confidence interval for each fit parameter (lower and upper bounds as first and second rows).
+        % errorSTDEV = (errors(2,:)-errors(1,:))/2; % Standard deviation of each fit parameter (probability to be between -STDEV and +STDEV is 68.2%).
+        
+        % % Auxiliary plots:
+        %     x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
+        %     y_fitted = A_fitY+B_fitY*(x_data2-x0_fitY).^2;
+        %     subplot(1,2,2)
+        %     plot(x_data,y_data,'o');
+        %     hold on;
+        %     xlabel('y corr')
+        %     ylabel('cross-correl along Y')
+        %     plot(x_data2,y_fitted);
+        %     title(strcat('y0 = ',num2str(x0_fitY),' pix'))
+    else % if there are NaN values, do not fit and just save empty values:
+        x0_fitY = [];
+        rsq_fitY = 0;
+    end
     
-    % % Auxiliary plots:
-    %     x_data2 = min(x_data):(max(x_data)-min(x_data))/50:max(x_data); % plot fitted curve with higher sampling.
-    %     y_fitted = A_fitY+B_fitY*(x_data2-x0_fitY).^2;
-    %     subplot(1,2,2)
-    %     plot(x_data,y_data,'o');
-    %     hold on;
-    %     xlabel('y corr')
-    %     ylabel('cross-correl along Y')
-    %     plot(x_data2,y_fitted);
-    %     title(strcat('y0 = ',num2str(x0_fitY),' pix'))
-
     % The displacements x0_fitX and x0_fitY obtained from fitting the
     % cross-correlation peaks are equal to twice the actual displacement of the
     % bead centre from the centre of the subarray:
@@ -479,8 +490,8 @@ else
     y_new = round(y_estimate)+delta_Y;
     
     % % Return result:
-%     disp(['new x_centre estimate = ',num2str(x_new)])
-%     disp(['new y_centre estimate = ',num2str(y_new)])
+    %     disp(['new x_centre estimate = ',num2str(x_new)])
+    %     disp(['new y_centre estimate = ',num2str(y_new)])
     
     
     %% Output of the function:
@@ -506,5 +517,6 @@ else
     % hold;
     % plot(x_new-round(x_estimate)+d+1,y_new-round(y_estimate)+d+1,'o','Color','r','MarkerSize',70); title('obtained centre')
     % hold off;
+    
     
 end
