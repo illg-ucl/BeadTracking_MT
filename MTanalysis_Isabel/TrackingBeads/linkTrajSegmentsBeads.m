@@ -33,8 +33,8 @@ function linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,da
 % that is equal to the file name without the file extension. For example,
 % for image video file "210217r25.tif", image_label would be the
 % string '210217r25'. Same throughout the entire BeadTracking_MT code.
-% - start_frame and end_frame: are the frames through which the loop runs to plot the result trajectories.
-% They should be the same as previously used to produce bead_results using FindTrajectsBeads.m.
+% - start_frame (number) and end_frames (can be number or 'end') are the frames through which the loop runs to plot the result trajectories.
+% They should be the same as previously used to produce particle_results using FindTrajectsBeads.m.
 % - bead_results: parameters (bead_results{1}) and calculated trajectory segments (bead_results{2}). It is the output of function FindTrajectsBeads.m 
 % (it is a cell array with two elements. The second one is a structure array containing all segment results).
 % - data_set_label: is a user-defined label for the data set, that will form part of the name of the output excel file. E.g.: 'ATPase-GFP'.  
@@ -128,7 +128,7 @@ if max([traj_results.TrajNumber])> length(color_list)
 end
 % ------------
 
-%% Read in the .sif image data:
+%% Read in the image data:
 %
 % Read image-sequence file: 
 [numFrames frame_Ysize frame_Xsize image_data image_path] = extract_image_sequence_data(image_label);
@@ -138,6 +138,9 @@ end
 % Frame dimensions are frame_Ysize and frame_Xsize.
 % --------------------------------------------------------------
 
+if strcmp(end_frame,'end') % if input end_frame is 'end'
+    end_frame = numFrames;
+end
 
 %% SORT and ARRANGE TRAJECTORY DATA, step 1:
 % Convert structure resulting from function FindTrajects.m into useful
