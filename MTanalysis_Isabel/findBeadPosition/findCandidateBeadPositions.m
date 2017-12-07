@@ -55,9 +55,9 @@ function [xx,yy] = findCandidateBeadPositions(frame,method)
 
 
 %% PARAMETERS:
-disk_radius1 = 4; % disk radius in pixels, for smoothing transformations below. Default 4.
-disk_radius2 = 6; % disk radius in pixels for eliminating small things that are not beads. Default 6.
-threshold_factor = 0.7; % For thresholding, aiming to detect the black centre of magnetic beads. Default 0.64.
+disk_radius1 = 3; % disk radius in pixels, for smoothing transformations below. Default 4.
+disk_radius2 = 1; % disk radius in pixels for eliminating small things that are not beads. Default 6.
+threshold_factor = 0.72; % For thresholding, aiming to detect the black centre of magnetic beads. Default 0.7.
 % Adjust according to image contrast.
 % A factor ~0.6 seems to be best to allow detection of dimmer beads and also separation
 % of nearby beads, though it can give rise to false candidates (between close beads).

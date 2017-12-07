@@ -50,22 +50,19 @@ function scriptToRun
 %
 % - 3. Make sure the Current Folder within Matlab is the folder that contains
 % your image video files. 
-data_folder = 'C:\Users\isabel\ISABEL\UCL_Isabel\Crick\ExperimentalData\MTsampleData';
+% data_folder = 'C:\Users\isabel\ISABEL\UCL_Isabel\Crick\ExperimentalData\MTsampleData';
+data_folder = 'C:\Users\isabel\ISABEL\UCL_Isabel\DataAnalysis\JohnnyNguyen_PSmagnetophoresis';
 cd(data_folder)
 
 % - 4. Define image_label: 
-image_label = '210217r25';
+% image_label = '210217r25';
+image_label = 'PPS5um_0d6MnCl2_x2_014_crop';
 % - image_label: string that labels a given image sequence found in current
 % folder. The code finds the path of the image file automatically based on a string label 
 % that is equal to the file name without the file extension. For example,
 % for image video file "210217r25.tif", image_label would be the
 % string '210217r25'. Same throughout the entire BeadTracking_MT code.
 % 
-% TRICK: If you don't know the number of frames in a given image you can do:
-% frame1 = extract1frameB(1);
-% and select the image from a folder. The command window will print the
-% number of frames on the image sequence, the file path and frame size.
-%
 % - 5. PARAMETERS: There are a number of important parameters that need to be set right.
 % These are within functions FindTrajectsBeads.m and
 % linkTrajSegmentsBeads.m. Find these functions in the
@@ -107,15 +104,39 @@ minPointsTraj = 10;
 %
 % - 7. Find trajectories and output them to one excel file in the current
 % directory.
-% Use functions: 
-% bead_results = FindTrajectsBeads(image_label,start_frame,end_frame)
-% and
+% Use functions FindTrajectsBeads and linkTrajSegmentsBeads: 
+% bead_results = FindTrajectsBeads(image_label,start_frame,end_frame,excludedRegions)
+%
+% - last input: excludedRegions: to exclude certain regions from image. 
+% Enter [] (so that isempty(excludedRegions) = 1) if you
+% don't want to exclude any regions.
+% Input a structure as follows to exclude one or several regions.
+% Regions to exclude are given by start coordinates (x_start, y_start) for
+% top left corner of rectangle on image and end coordinates (x_end, y_end)
+% for bottom right corner of rectangle. Coordinates delimit rectangular
+% boxes on image and several rectangles can be defined. All rectangles are
+% put together in structure input excludedRegions:
+% Example, for Sonia's images we exclude the following regions:
+% excludedRegions.list_xstart = [1 1 1 130];
+% excludedRegions.list_xend = [820 112 100 215];
+% excludedRegions.list_ystart = [581 492 1 1];
+% excludedRegions.list_yend = [614 580 175 54];
+%
 % linkTrajSegmentsBeads(image_label,start_frame,end_frame,bead_results,data_set_label).
 % E.g., for frames 1 to 20 in video "210217r25.tif" in the current directory:
-t25 = FindTrajectsBeads(image_label,1,20);
+%t25 = FindTrajectsBeads(image_label,1,20);
+% Note: you can use 'end' as input when you don't know the total number of
+% frames in a video.
+% ALSO: when you don't know the number of frames in a given image you can do:
+% frame1 = extract1frameB(1);
+% and select the image from a folder. The command window will print the
+% number of frames on the image sequence, the file path and frame size.
+
+t14 = FindTrajectsBeads(image_label,1,'end',[]);
 save 'resultStructures.mat' 't*' % save all result structures in a .mat file.
 
-linkTrajSegmentsBeads(image_label,1,20,t25,data_set_label); 
+%linkTrajSegmentsBeads(image_label,1,20,t25,data_set_label); 
+linkTrajSegmentsBeads(image_label,1,'end',t14,data_set_label); 
 % The above two lines generate an Excel file with all the trajectory data,
 % "tests_25_fullTrajs.xls", in the current directory folder, for further
 % analysis. This file contains two tabs with the parameters used in the
@@ -180,9 +201,10 @@ save(output_filename,'good_tracks') % save variable good_tracks2.
 % This is based on functions showBeadTrajAnalysis.m and
 % showManyBeadTrajAnalysis.m
 % Running the line below produces one analysis excel file and graph per track:
-% processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,minPointsTraj)
-showManyBeadTrajAnalysis(image_label,data_set_label,1,'end',1,1,100,0,minPointsTraj);
+% processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,saveAvi,minPointsTraj)
 
+%showManyBeadTrajAnalysis(image_label,data_set_label,1,'end',1,1,100,0,0,minPointsTraj);
+showManyBeadTrajAnalysis(image_label,data_set_label,1,'end',1,1/14,460,0,0,minPointsTraj);
 
 
 %% To carry out tests of the methods on a single frame:

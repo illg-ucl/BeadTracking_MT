@@ -51,7 +51,7 @@ function bead_results = FindTrajectsBeads(image_label,start_frame,end_frame,excl
 % 
 % Example of how to call this function: 
 % for frames 1 to 10 of image "Heiko_Thu Jun 24 2010_554.sif" in current folder:
-% beadResults1 = FindTrajectsBeads('554',1,10); 
+% beadResults1 = FindTrajectsBeads('554',1,'end',[]); 
 % -------------------------------------------------------
 % NOTE: for reading .sif files you need 'read_sif_data_direct.m',
 % 'GetAndorSifSize', etc. which are currently in path:
@@ -386,6 +386,7 @@ hold off;
 tr =1; % initialise trajectory index.
 
 for k = (start_frame+1):end_frame
+    
     % to go through all frames do instead: for k = 1:length(sifData)
     
     frame = image_data(k).frame_data; % extract frame data which is stored in field 'frame_data'.
