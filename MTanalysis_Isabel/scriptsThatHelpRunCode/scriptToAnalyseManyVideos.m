@@ -52,7 +52,10 @@ videoFile_extension = '.avi';
 % excludedRegions.list_xend = [820 112 100 215];
 % excludedRegions.list_ystart = [581 492 1 1];
 % excludedRegions.list_yend = [614 580 175 54];
-
+%
+% Enter [] (so that isempty(excludedRegions) = 1) if you
+% don't want to exclude any regions.
+excludedRegions = [];
 
 %% Find video files with the chosen extension in current directory and make list of labels:
 
@@ -82,15 +85,15 @@ for i = 1:length(videoLabel)
    i
    videoLabel{i}
    % Track particles in videos:
-   tracks{i} = FindTrajectsParticles(videoLabel{i},1,'end',excludedRegions);
+   tracks{i} = FindTrajectsBeads(videoLabel{i},1,'end',excludedRegions);
    
    % save tracking results:
    save 'resultStructures.mat' 'tracks'
    
-   linkTrajSegmentsParticles(videoLabel{i},1,'end',tracks{i},data_set_label);
-
+   linkTrajSegmentsBeads(videoLabel{i},1,'end',tracks{i},data_set_label);
+   
    % Plot and save particle numbers on png:
-   plotParticleTrajNumbers(videoLabel{i},data_set_label,10); 
+   plotBeadTrajNumbers(videoLabel{i},data_set_label,minPointsTraj); 
    cd(data_folder);
    
    close all
