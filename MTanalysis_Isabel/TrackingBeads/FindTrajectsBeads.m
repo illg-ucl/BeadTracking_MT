@@ -32,7 +32,8 @@ function bead_results = FindTrajectsBeads(image_label,start_frame,end_frame)
 % for image video file "210217r25.tif", image_label would be the
 % string '210217r25'. Same throughout the entire BeadTracking_MT code.
 % - start_frame: first frame of the sequence to be analysed.
-% - end_frame: last frame of the sequence to be analysed.
+% - end_frame: last frame of the sequence to be analysed. One can write
+% 'end' if this is not known.
 % 
 % Example of how to call this function: 
 % for frames 1 to 10 of image "Heiko_Thu Jun 24 2010_554.sif" in current folder:
@@ -215,6 +216,10 @@ params.rej = rej; % Save parameters to results as structure "params".
 % To get frame number "p" do: image_data(p).frame_data.
 % Frame dimensions are frame_Ysize and frame_Xsize.
 % --------------------------------------------------------------
+
+if strcmp(end_frame,'end') % if input end_frame is 'end'
+    end_frame = numFrames;
+end
 
 % Save to parameters (for output):
 params.file_name = image_path;
