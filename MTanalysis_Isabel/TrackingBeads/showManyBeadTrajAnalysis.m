@@ -1,4 +1,4 @@
-function processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,minPointsTraj) 
+function processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,saveAvi,minPointsTraj) 
 %
 % ========================================
 % BeadTracking_MT.
@@ -66,6 +66,8 @@ function processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_labe
 % - pixelsize_nm: pixel size in nm (e.g. 35.333nm for fluorescence data).
 % - showVideo: input parameter to show a video of the trajectory
 % overlaid on the image sequence or not.
+% - saveAvi: to save or not an .avi video file of the trajectory with
+% overlaid particle centre and orientation, shows subarray, not full image (1 or 0).
 % - minPointsTraj: Minimum number of data points that a trajectory must have in order to be
 % analised (default minPointsTraj = 10, at least 3). 
 %
@@ -145,6 +147,12 @@ function processedManyTrajs = showManyBeadTrajAnalysis(image_label,data_set_labe
 % either...
 quickLook = 0;
 
+% Frame rate to show video and for the saved .avi video file:
+framesPerSecond = 5;
+% e.g., 25 frames per second corresponds to 40ms between frames.
+
+% initial_folder_path = cd; 
+
 
 %% Get path for trajectory data (excel file):
 
@@ -163,9 +171,10 @@ trajXlsPath = trajXlsPath0.name;
 
 % Make new folder (new directory) to save trajectory analysis results:
 pos1 = strfind(trajXlsPath,'fullTrajs.xls'); % position of the start of the string 'fullTraj.xls' in the xls input file name.
-new_folder_name = trajXlsPath(1:(pos1-2)); % Take the name of the input excel file (with the end bit 'fullTraj.xls' removed) as the new folder name.
-% Note that the directory "new_folder_name" is created by function
-% showTrajAnalysis2.m when called from this function.
+new_folder_name = trajXlsPath(1:(pos1-2)); % Output folder path. Take the name of the input excel file (with the end bit 'fullTraj.xls' removed) as the new folder name.
+warning('off','MATLAB:MKDIR:DirectoryExists'); % Turn off warning: "Warning: Directory already exists." .
+mkdir(new_folder_name); % make new directory.
+
 
 %% Get path for .mat file with the numbers of the good tracks:
 
@@ -351,13 +360,27 @@ for n = n_traj_start:n_traj_end
             % Loop through frames in each trajectory analysed:
             figure('Tag','Data video','units','inches','position',[12 4 6 6]); % Figure number 2.
             
-            %         % Create video file:
-            %         set(gca,'nextplot','replacechildren');
+            if saveAvi == 1
+                % clear mex % close all open .avi files (this avoids future errors).
+                % Move into output folder to save videos:
+                cd(new_folder_name);
+                video_filename = strcat(image_label,'_Video','Traj_',num2str(n),'.avi'); % filename of video.
+                % Create and open avi file for saving frames onto it later:
+                mov = VideoWriter(video_filename);
+                % mov = VideoWriter(video_filename,'Uncompressed AVI'); %
+                % this seems to not allow Windows Media Player to open
+                % uncompressed videos. Need to get right codecs:
+                % https://support.microsoft.com/en-us/help/15070/windows-media-player-codecs-frequently-asked-questions
+                mov.FrameRate = framesPerSecond; % frame rate for the saved video.
+                mov.Quality = 100;              
+                % Open video file for writing:
+                open(mov);
+            end
             
             % 'position' vector is [left, bottom, width, height].
             % left, bottom control the position at which the window appears when it pops.
             
-            for k = 1:length(frames_list)
+            for k = 1:length(frames_list) % loop through frames in track
                 
                 frame = image_data(frames_list(k)).frame_data; % extract frame data which is stored in field 'frame_data'.
                 frame = double(frame);
@@ -369,9 +392,17 @@ for n = n_traj_start:n_traj_end
                 pause(0.3); % this pause is needed to give time for the plot to appear (0.1 to 0.3 default)
                 hold off;
                 
-                %             % Save each frame to the video:
-                %             track_video(k) = getframe;
-                
+                % ---
+                if saveAvi == 1
+                    % Save each frame plotted to the video mov:
+                    F = getframe(gca);
+                    writeVideo(mov,F)
+                end
+                % ---                
+            end
+            
+            if saveAvi == 1
+                cd('..') % go back to previous folder after saving video file in new_folder_name
             end
             
         end

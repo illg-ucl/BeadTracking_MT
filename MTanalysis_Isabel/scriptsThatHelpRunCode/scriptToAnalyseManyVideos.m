@@ -32,7 +32,7 @@ cd('C:\Users\isabel\ISABEL\UCL_Isabel\DataAnalysis\JohnnyNguyen_PSmagnetophoresi
 data_set_label = 'analysis'; 
 
 % Minimum number of points in track for it to be accepted:
-minPointsTraj = 10;
+minPointsTraj = 20;
 
 % Make sure current directory is the directory containing the video files:
 data_folder = cd;
@@ -102,17 +102,16 @@ end
  
 %% Loop through videos to further analyse tracks:
 
-
 for i = 1:length(videoLabel)   
    i
    videoLabel{i}
    % Go through tracks, decide which are "good" ones and save them to .mat
    % file in current directory for further processing:
-   good_tracks{i} = goThroughParticleTracksVideo(videoLabel{i},data_set_label,1,'end',minPointsTraj,maxMajorAxisLength,0); 
+   good_tracks{i} = goThroughBeadTracksVideo(videoLabel{i},data_set_label,1,'end',minPointsTraj); 
    
    % Further process tracks to produce one plot and excel file per track:
    % showManyParticleTrajAnalysis(image_label,data_set_label,n_traj_start,n_traj_end,start_frame,tsamp,pixelsize_nm,showVideo,saveAvi,minPointsTraj)
-   processedTrajs{i} = showManyParticleTrajAnalysis(videoLabel{i},data_set_label,1,'end',1,0.0333,1,1,1,minPointsTraj);
+   processedTrajs{i} = showManyBeadTrajAnalysis(videoLabel{i},data_set_label,1,'end',1,1/14,406,0,0,minPointsTraj);
    % save processed results:
    save 'resultTracks.mat' 'processedTrajs'
 end
