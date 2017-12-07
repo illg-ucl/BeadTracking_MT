@@ -453,19 +453,24 @@ best_assignmt_groups = num2cell(best_assignmts,2);
 jj = 1; %jj is index for accepted best assignments.
 while jj < size(best_assignmt_groups,1)
     
-%     jj
+%      jj
     
     first_column = []; % make list of elements in first column of assignments.
     for kk = 1:size(best_assignmt_groups,1)
         first_column = [first_column; best_assignmt_groups{kk}(1)]; % append first element of other assignemnts.
     end
     
-%     first_column
+%      first_column
     
     row_link = find( first_column == best_assignmt_groups{jj}(end) ); % row corresponding to another found assignment which links to the present one.
     % note that in best_assignmt_groups all competing assignments have been solved already.
     
-%     row_link
+    % Error control: in case row_link has more than one element:
+    if length(row_link)>1  % pick first choice (this is random)
+       row_link = row_link(1);
+    end   
+    
+%      row_link
     
     if isempty(row_link) % if there is not another assignment which links to the present one:
         jj = jj+1; % we leave best_assignmt_groups unchanged and advance index jj to move on to next assignment in best_assignmt_groups.
@@ -476,8 +481,8 @@ while jj < size(best_assignmt_groups,1)
         % do not advance jj index, try to find a possible following link
         % for current grouped assignment.
         
-%         best_assignmt_groups
-%         best_assignmt_groups{jj}
+%          best_assignmt_groups
+         best_assignmt_groups{jj}
         
     end
     
