@@ -23,23 +23,23 @@ function [frame]=extract1frameB(frame_number)
 % url          = {https://github.com/illg-ucl/BeadTracking_MT}}
 % ========================================
 %
-% This function chooses an image sequence (.sif, .dv, .tif or .mat data) 
+% This function chooses an image sequence (.sif, .dv, .tif, .m4v, .mat or .avi data) 
 % from an input dialog box, returns the image data corresponding to 
 % "frame_number", and plots it. Based on extract_image_sequence_data.m.
 % Note that it reads the full images (which is unnecessary perhaps).
 %
 % Example of how to call this function: extract1frame(100). 
 
-disp('Choose input image data sequence (.sif, .dv, .tif or .mat data):')
+disp('Choose input image data sequence (.sif, .dv, .tif, .m4v, .mat or .avi data):')
 disp(' ') % empty line
 
 % uigetfile opens a file dialog box to choose image data file:
 %[file_data,path_data] = uigetfile({'*.sif'}, 'Chose image data sequence:');
-[file_data,path_data] = uigetfile({'*.sif';'*.dv';'*.mat';'*.tif'},'Chose image data sequence (.sif, .dv, .tif or .mat data):');
+[file_data,path_data] = uigetfile({'*.sif';'*.dv';'*.mat';'*.tif';'*.m4v';'*.avi'},'Chose image data sequence (.sif, .dv, .tif, .m4v, .mat or .avi data):');
 
-% Error control if neither a .sif, .tif, .mat or .dv file have been selected:
-if isempty(path_data) % If there is no .sif, .tif or .dv image sequence file for such image_label, show error and exit function:
-    error('Check you are in the correct directory and run again. No .sif, .tif, .dv or .mat file selected.');
+% Error control if neither a .sif, .tif, .mat, .dv or .avi file have been selected:
+if isempty(path_data) % If there is no .sif, .tif, .m4v, .dv or .avi image sequence file for such image_label, show error and exit function:
+    error('Check you are in the correct directory and run again. No .sif, .tif, .m4v, .dv, .mat or .avi file selected.');
 end
 
 data_folder_path = strcat(path_data,file_data);
@@ -58,6 +58,8 @@ dvImageExists=strfind(image_path,'.dv');
 sifImageExists=strfind(image_path,'.sif');
 tifImageExists=strfind(image_path,'.tif');
 matImageExists=strfind(image_path,'.mat');
+m4vImageExists=strfind(image_path,'.m4v');
+aviImageExists=strfind(image_path,'.avi');
 
 % Turn off image size adjust warning: "Warning: Image is too big to fit on screen; displaying
 % at X%". Warning identifier  is 'images:initSize:adjustingMag'.
@@ -158,6 +160,43 @@ if isempty(tifImageExists)==0
 end
 
 
+%% For .m4v files 
+
+if isempty(m4vImageExists)==0
+    
+    m4v_info = VideoReader(image_path);
+    % Add other useful info to final output:
+    frame_Ysize = m4v_info.Height;
+    frame_Xsize = m4v_info.Width;
+%     % Make the image be a square image:
+%     frame_Ysize = min(frame_Ysize,frame_Xsize);
+%     frame_Xsize = min(frame_Ysize,frame_Xsize);
+
+    % If by any chance the frame size is an odd number:
+    if mod(frame_Ysize,2)~=0 % modulus after division
+        frame_Ysize = frame_Ysize - 1;
+        frame_Xsize = frame_Xsize - 1;
+    end
+    
+    % To produce image data in final output form:
+    % Read in frames:
+    k = 1;
+    while hasFrame(m4v_info)
+        frame = readFrame(m4v_info);
+        frame = single(frame);  % to class single.
+        % frame = double(frame);  % to class double.
+        % Convert RGB values to grayscale values by forming a weighted sum
+        % of the R, G, and B components, see rgb2gray:
+        image_data(k).frame_data = 0.2989 * frame(:,:,1) + 0.5870 * frame(:,:,2) + 0.1140 * frame(:,:,3);
+        k = k+1;
+    end
+    
+    numFrames = k-1; % number of frames in sequence.    
+    
+end
+
+
+
 %% For .mat files 
 
 if isempty(matImageExists)==0
@@ -204,6 +243,41 @@ if isempty(matImageExists)==0
     
 end
 
+
+%% For .avi files 
+
+if isempty(aviImageExists)==0
+       
+    avi_info = VideoReader(image_path);
+    % Add other useful info to final output:
+    frame_Ysize = avi_info.Height;
+    frame_Xsize = avi_info.Width;
+%     % Make the image be a square image:
+%     frame_Ysize = min(frame_Ysize,frame_Xsize);
+%     frame_Xsize = min(frame_Ysize,frame_Xsize);
+
+    % If by any chance the frame size is an odd number:
+    if mod(frame_Ysize,2)~=0 % modulus after division
+        frame_Ysize = frame_Ysize - 1;
+        frame_Xsize = frame_Xsize - 1;
+    end
+    
+    % To produce image data in final output form:
+    % Read in frames:
+    k = 1;
+    while hasFrame(avi_info)
+        frame = readFrame(avi_info);
+        frame = single(frame);  % to class single.
+        % frame = double(frame);  % to class double.
+        % Convert RGB values to grayscale values by forming a weighted sum
+        % of the R, G, and B components, see rgb2gray:
+        image_data(k).frame_data = 0.2989 * frame(:,:,1) + 0.5870 * frame(:,:,2) + 0.1140 * frame(:,:,3);
+        k = k+1;
+    end
+    
+    numFrames = k-1; % number of frames in sequence.    
+    
+end
 
 
 %% Output info to command window:
