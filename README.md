@@ -1,5 +1,5 @@
 # BeadTracking_MT
-Code for the detection and tracking in 3D of beads (with diffraction rings), typically used to analyse Magnetic Tweezer data.
+Code towards the detection and tracking in 3D of beads (with diffraction rings), typically used to analyse Magnetic Tweezer data. 2D tracking of beads is implemented. For tracking along z (beam propagation direction, optical axis), code is at the moment in a private fork soon to be released.
 
 Copyright (c) 2017. Isabel Llorente-Garcia, Dept. of Physics and Astronomy, University College London, United Kingdom.
 
