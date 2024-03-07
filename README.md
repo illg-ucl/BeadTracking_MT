@@ -2,6 +2,12 @@
 
 Code for the detection and tracking in 2D of spherical particles (with diffraction rings), typically used to analyse Magnetic Tweezer data. Two-dimensional (2D) tracking of beads is implemented. For tracking along the third dimension, z (beam propagation direction, optical axis), code is at the moment not included.
 
+Example: 
+
+<p align="center">
+  <img src="https://github.com/illg-ucl/BeadTracking_MT/blob/master/bead_tracking_MT.png" width=50% height=50%>
+</p>
+
 # Copyright and License
 
 Copyright (c) 2017. Isabel Llorente-Garcia, Dept. of Physics and Astronomy, University College London, United Kingdom.
